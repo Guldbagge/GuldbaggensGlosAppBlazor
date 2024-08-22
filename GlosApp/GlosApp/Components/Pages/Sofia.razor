@@ -1,0 +1,127 @@
+﻿@page "/sofia"
+@rendermode InteractiveServer
+@using System.Linq
+
+<div class="container">
+    <h3>Glosformulär Engelska</h3>
+
+    <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
+        @foreach (var answer in userAnswerForm.Answers)
+        {
+            <div class="form-group">
+                <label>@answer.Swedish</label>
+                <InputText @bind-Value="answer.UserAnswer" class="form-control" autocomplete="off" />
+                @if (showResult)
+                {
+                    if (string.IsNullOrWhiteSpace(answer.UserAnswer))
+                    {
+                        <span class="text-warning">⚠️ Detta fält är tomt.</span>
+                    }
+                    else if (answer.UserAnswer.Equals(answer.English, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <span class="text-success">✔️ Rätt!</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">❌ Fel, rätt svar är "@answer.English".</span>
+                    }
+                }
+            </div>
+        }
+
+        @if (showResult)
+        {
+            <div class="alert alert-info">
+                Du fick @correctAnswers av @userAnswerForm.Answers.Count ord rätt!
+            </div>
+        }
+
+        @if (missingAnswers)
+        {
+            <div class="alert alert-warning">
+                Du måste fylla i alla fält innan du kan kontrollera dina svar.
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Kontrollera svar</button>
+        <button type="button" class="btn btn-success" @onclick="ResetForm">Rensa glosformuläret</button>
+    </EditForm>
+
+</div>
+
+@code {
+    private UserAnswerForm userAnswerForm = new UserAnswerForm();
+    private int correctAnswers = 0;
+    private bool showResult = false;
+    private bool missingAnswers = false;
+
+    protected override void OnInitialized()
+    {
+        userAnswerForm.Answers = new List<WordAnswer>
+    {
+        new WordAnswer("Hund", "Dog"),
+        new WordAnswer("Katt", "Cat"),
+        new WordAnswer("Hus", "House"),
+        new WordAnswer("Bok", "Book"),
+        new WordAnswer("Bil", "Car"),
+        new WordAnswer("Bord", "Table"),
+        new WordAnswer("Stol", "Chair"),
+        new WordAnswer("Äpple", "Apple"),
+        new WordAnswer("Dator", "Computer"),
+        new WordAnswer("Fönster", "Window")
+    };
+    }
+
+
+    private void CheckAnswers()
+    {
+        // Kontrollera om alla fält är ifyllda
+        missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
+
+        if (missingAnswers)
+        {
+            // Om något fält är tomt, visa varning och avbryt
+            showResult = false;
+            return;
+        }
+
+        // Om alla fält är ifyllda, räkna rätta svar
+        correctAnswers = userAnswerForm.Answers.Count(answer =>
+            answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
+
+        // Visa resultatet
+        showResult = true;
+    }
+
+    public class UserAnswerForm
+    {
+        public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
+    }
+
+    public class WordAnswer
+    {
+        public string Swedish { get; set; }
+        public string English { get; set; }
+        public string UserAnswer { get; set; }
+
+        public WordAnswer(string swedish, string english)
+        {
+            Swedish = swedish;
+            English = english;
+        }
+    }
+
+    private void ResetForm()
+    {
+        // Återställ svaren till tomma strängar
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            answer.UserAnswer = string.Empty;
+        }
+
+        // Återställ andra relaterade variabler
+        correctAnswers = 0;
+        showResult = false;
+        missingAnswers = false;
+    }
+}

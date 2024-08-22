@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlosApp", "GlosApp\GlosApp\GlosApp.csproj", "{8B48F92A-8074-43C5-944F-C4821F57A6E1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlosApp.Client", "GlosApp\GlosApp.Client\GlosApp.Client.csproj", "{C71F59E4-8386-42F5-A113-E4A0EBF62187}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B48F92A-8074-43C5-944F-C4821F57A6E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B48F92A-8074-43C5-944F-C4821F57A6E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B48F92A-8074-43C5-944F-C4821F57A6E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B48F92A-8074-43C5-944F-C4821F57A6E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C71F59E4-8386-42F5-A113-E4A0EBF62187}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C71F59E4-8386-42F5-A113-E4A0EBF62187}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C71F59E4-8386-42F5-A113-E4A0EBF62187}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C71F59E4-8386-42F5-A113-E4A0EBF62187}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {037F7043-DE0A-48B6-8473-62CE3C0FF0A1}
+	EndGlobalSection
+EndGlobal
