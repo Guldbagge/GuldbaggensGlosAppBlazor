@@ -1,23 +1,11 @@
 ﻿@page "/alma"
 @rendermode InteractiveServer
 @using System.Linq
+@using GlosApp.Models
+@inject ApplicationDbContext DbContext
 
 <div class="container">
     <h3>Glosformulär - Spanska</h3>
-
-    @if (showResult)
-    {
-        <div class="alert alert-info">
-            Du fick @correctAnswers av @userAnswerForm.Answers.Count ord rätt!
-        </div>
-    }
-
-    @if (missingAnswers)
-    {
-        <div class="alert alert-warning">
-            Du måste fylla i alla fält innan du kan kontrollera dina svar.
-        </div>
-    }
 
     <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
         @foreach (var answer in userAnswerForm.Answers)
@@ -43,6 +31,20 @@
             </div>
         }
 
+        @if (showResult)
+        {
+            <div class="alert alert-info">
+                Du fick @correctAnswers av @userAnswerForm.Answers.Count ord rätt!
+            </div>
+        }
+
+        @if (missingAnswers)
+        {
+            <div class="alert alert-warning">
+                Du måste fylla i alla fält innan du kan kontrollera dina svar.
+            </div>
+        }
+
         <button type="submit" class="btn btn-primary">Kontrollera svar</button>
         <button type="button" class="btn btn-success" @onclick="ResetForm">Rensa glosformuläret</button>
     </EditForm>
@@ -58,200 +60,59 @@
     protected override void OnInitialized()
     {
         userAnswerForm.Answers = new List<WordAnswer>
-    {
-        new WordAnswer("Vän", "Amigo"),
-        new WordAnswer("Sol", "Sol"),
-        new WordAnswer("Vatten", "Agua"),
-        new WordAnswer("Familj", "Familia"),
-        new WordAnswer("Skola", "Escuela"),
-        new WordAnswer("Färg", "Color"),
-        new WordAnswer("Mat", "Comida"),
-        new WordAnswer("Glädje", "Alegría"),
-        new WordAnswer("Kärlek", "Amor"),
-        new WordAnswer("Träd", "Árbol")
-    };
+        {
+            new WordAnswer("Vän", "Amigo", "Spanish"),
+            new WordAnswer("Sol", "Sol", "Spanish"),
+            new WordAnswer("Vatten", "Agua", "Spanish"),
+            new WordAnswer("Familj", "Familia", "Spanish"),
+            new WordAnswer("Skola", "Escuela", "Spanish"),
+            new WordAnswer("Färg", "Color", "Spanish"),
+            new WordAnswer("Mat", "Comida", "Spanish"),
+            new WordAnswer("Glädje", "Alegría", "Spanish"),
+            new WordAnswer("Kärlek", "Amor", "Spanish"),
+            new WordAnswer("Träd", "Árbol", "Spanish")
+        };
     }
-
 
     private void CheckAnswers()
     {
-        // Kontrollera om alla fält är ifyllda
         missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
 
         if (missingAnswers)
         {
-            // Om något fält är tomt, visa varning och avbryt
             showResult = false;
             return;
         }
 
-        // Om alla fält är ifyllda, räkna rätta svar
         correctAnswers = userAnswerForm.Answers.Count(answer =>
             answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
 
-        // Visa resultatet
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            DbContext.WordAnswers.Add(new WordAnswer(answer.Swedish, answer.English, "Spanish")
+                {
+                    UserAnswer = answer.UserAnswer
+                });
+        }
+
+        DbContext.SaveChanges();
         showResult = true;
+    }
+
+    private void ResetForm()
+    {
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            answer.UserAnswer = string.Empty;
+        }
+
+        correctAnswers = 0;
+        showResult = false;
+        missingAnswers = false;
     }
 
     public class UserAnswerForm
     {
         public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
     }
-
-    public class WordAnswer
-    {
-        public string Swedish { get; set; }
-        public string English { get; set; }
-        public string UserAnswer { get; set; }
-
-        public WordAnswer(string swedish, string english)
-        {
-            Swedish = swedish;
-            English = english;
-        }
-    }
-
-    private void ResetForm()
-    {
-        // Återställ svaren till tomma strängar
-        foreach (var answer in userAnswerForm.Answers)
-        {
-            answer.UserAnswer = string.Empty;
-        }
-
-        // Återställ andra relaterade variabler
-        correctAnswers = 0;
-        showResult = false;
-        missingAnswers = false;
-    }
 }
-
-
-
-@* <h3>Formulär</h3>
-
-<EditForm FormName="Golosor" Model="userForm" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <InputText id="name" @bind-Value="userForm.Name" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <InputText id="password" @bind-Value="userForm.Password" type="password" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</EditForm>
-
-@code {
-    private UserFormModel userForm = new UserFormModel();
-
-    private void HandleValidSubmit()
-    {
-        // Hantera formulärsändning här
-        Console.WriteLine($"Name: {userForm.Name}, Password: {userForm.Password}");
-    }
-
-    public class UserFormModel
-    {
-        public string Name { get; set; }
-        public string Password { get; set; }
-    }
-}
- *@
-
-
-
-@* 
-@using System.Linq
-
-<h3>Glosformulär</h3>
-
-@if (showResult)
-{
-    <div class="alert alert-info">
-        Du fick @correctAnswers av @words.Count ord rätt!
-    </div>
-}
-
-<EditForm FormName="Golosor" Model="userAnswers" OnValidSubmit="CheckAnswers" novalidate>
-    @for (int i = 0; i < words.Count; i++)
-    {
-        <div class="form-group">
-            <label>@words[i].Swedish</label>
-            <InputText @bind-Value="userAnswers[i]" class="form-control" />
-            @if (showResult)
-            {
-                if (userAnswers[i].Equals(words[i].English, StringComparison.OrdinalIgnoreCase))
-                {
-                    <span class="text-success">✔️ Rätt!</span>
-                }
-                else
-                {
-                    <span class="text-danger">❌ Fel, rätt svar är "@words[i].English".</span>
-                }
-            }
-        </div>
-    }
-
-    <button type="submit" class="btn btn-primary">Kontrollera svar</button>
-</EditForm>
-
-@code {
-    private List<WordPair> words = new List<WordPair>
-    {
-        new WordPair("Hund", "Dog"),
-        new WordPair("Katt", "Cat"),
-        new WordPair("Hus", "House"),
-        new WordPair("Bok", "Book")
-    };
-
-    private List<string> userAnswers = new List<string>();
-    private int correctAnswers = 0;
-    private bool showResult = false;
-
-    protected override void OnInitialized()
-    {
-        // Initialisera användarens svar med tomma strängar
-        userAnswers = Enumerable.Repeat(string.Empty, words.Count).ToList();
-    }
-
-
-    private void CheckAnswers()
-    {
-        correctAnswers = 0;
-
-        for (int i = 0; i < words.Count; i++)
-        {
-            // Trimma svaret för att ta bort oönskade mellanslag
-            string userAnswer = userAnswers[i].Trim();
-            string correctAnswer = words[i].English.Trim();
-
-            // Kontrollera användarens svar och uppdatera antalet rätt
-            if (userAnswer.Equals(correctAnswer, StringComparison.OrdinalIgnoreCase))
-            {
-                correctAnswers++;
-            }
-        }
-
-        // Visa resultatet
-        showResult = true;
-    }
-
-    public class WordPair
-    {
-        public string Swedish { get; set; }
-        public string English { get; set; }
-
-        public WordPair(string swedish, string english)
-        {
-            Swedish = swedish;
-            English = english;
-        }
-    }
-}
- *@

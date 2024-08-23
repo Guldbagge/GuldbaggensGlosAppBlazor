@@ -1,6 +1,7 @@
 ﻿@page "/sofia"
 @rendermode InteractiveServer
 @using System.Linq
+@using GlosApp.Models
 @inject ApplicationDbContext DbContext
 
 <div class="container">
@@ -59,18 +60,18 @@
     protected override void OnInitialized()
     {
         userAnswerForm.Answers = new List<WordAnswer>
-    {
-        new WordAnswer("Hund", "Dog"),
-        new WordAnswer("Katt", "Cat"),
-        new WordAnswer("Hus", "House"),
-        new WordAnswer("Bok", "Book"),
-        new WordAnswer("Bil", "Car"),
-        new WordAnswer("Bord", "Table"),
-        new WordAnswer("Stol", "Chair"),
-        new WordAnswer("Äpple", "Apple"),
-        new WordAnswer("Dator", "Computer"),
-        new WordAnswer("Fönster", "Window")
-    };
+        {
+            new WordAnswer("Hund", "Dog"),
+            new WordAnswer("Katt", "Cat"),
+            new WordAnswer("Hus", "House"),
+            new WordAnswer("Bok", "Book"),
+            new WordAnswer("Bil", "Car"),
+            new WordAnswer("Bord", "Table"),
+            new WordAnswer("Stol", "Chair"),
+            new WordAnswer("Äpple", "Apple"),
+            new WordAnswer("Dator", "Computer"),
+            new WordAnswer("Fönster", "Window")
+        };
     }
 
     private void CheckAnswers()
@@ -90,34 +91,14 @@
         {
             DbContext.WordAnswers.Add(new WordAnswer(answer.Swedish, answer.English)
                 {
-                    UserAnswer = answer.UserAnswer
+                    UserAnswer = answer.UserAnswer,
+                    Language = "English"
                 });
         }
 
         DbContext.SaveChanges();
         showResult = true;
     }
-
-
-    public class UserAnswerForm
-    {
-        public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
-    }
-
-    public class WordAnswer
-    {
-        public int Id { get; set; }
-        public string Swedish { get; set; }
-        public string English { get; set; }
-        public string UserAnswer { get; set; }
-
-        public WordAnswer(string swedish, string english)
-        {
-            Swedish = swedish;
-            English = english;
-        }
-    }
-
 
     private void ResetForm()
     {
@@ -129,5 +110,10 @@
         correctAnswers = 0;
         showResult = false;
         missingAnswers = false;
+    }
+
+    public class UserAnswerForm
+    {
+        public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
     }
 }
