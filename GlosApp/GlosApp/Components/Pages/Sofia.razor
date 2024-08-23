@@ -1,6 +1,7 @@
 ﻿@page "/sofia"
 @rendermode InteractiveServer
 @using System.Linq
+@inject ApplicationDbContext DbContext
 
 <div class="container">
     <h3>Glosformulär Engelska</h3>
@@ -72,26 +73,31 @@
     };
     }
 
-
     private void CheckAnswers()
     {
-        // Kontrollera om alla fält är ifyllda
         missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
 
         if (missingAnswers)
         {
-            // Om något fält är tomt, visa varning och avbryt
             showResult = false;
             return;
         }
 
-        // Om alla fält är ifyllda, räkna rätta svar
         correctAnswers = userAnswerForm.Answers.Count(answer =>
             answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
 
-        // Visa resultatet
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            DbContext.WordAnswers.Add(new WordAnswer(answer.Swedish, answer.English)
+                {
+                    UserAnswer = answer.UserAnswer
+                });
+        }
+
+        DbContext.SaveChanges();
         showResult = true;
     }
+
 
     public class UserAnswerForm
     {
@@ -100,6 +106,7 @@
 
     public class WordAnswer
     {
+        public int Id { get; set; }
         public string Swedish { get; set; }
         public string English { get; set; }
         public string UserAnswer { get; set; }
@@ -111,15 +118,14 @@
         }
     }
 
+
     private void ResetForm()
     {
-        // Återställ svaren till tomma strängar
         foreach (var answer in userAnswerForm.Answers)
         {
             answer.UserAnswer = string.Empty;
         }
 
-        // Återställ andra relaterade variabler
         correctAnswers = 0;
         showResult = false;
         missingAnswers = false;
