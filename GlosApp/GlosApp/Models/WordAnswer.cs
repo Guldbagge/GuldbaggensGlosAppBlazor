@@ -7,12 +7,14 @@
         public string English { get; set; }
         public string UserAnswer { get; set; }
         public string Language { get; set; }
+        public DateTime Timestamp { get; set; } 
 
         public WordAnswer(string swedish, string english, string language = null)
         {
             Swedish = swedish;
             English = english;
             Language = language;
+            Timestamp = DateTime.Now; 
         }
     }
 }

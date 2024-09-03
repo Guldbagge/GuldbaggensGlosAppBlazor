@@ -1,4 +1,4 @@
-﻿<div class="header">
+﻿@* <div class="header">
     <NavLink href="/">
         <div class="logo">
             <img src="/images/logo.jpg" alt="Logo" />
@@ -11,3 +11,19 @@
 @code {
 
 }
+ *@
+
+<div class="header">
+    <NavLink href="/">
+        <div class="logo">
+            <img src="/images/logo.jpg" alt="Logo" />
+        </div>
+    </NavLink>
+    <h1>Guldbaggens GlosApp</h1>
+    <!-- Ikonen som är en klickbar länk till /test -->
+    <NavLink href="/AnswerReview" class="header-icon-link">
+        <div class="header-icon">
+            <i class="fa-regular fa-user-check"></i>
+        </div>
+    </NavLink>
+</div>

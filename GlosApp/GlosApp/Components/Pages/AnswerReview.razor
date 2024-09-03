@@ -1,0 +1,56 @@
+﻿@page "/AnswerReview"
+
+@rendermode InteractiveServer
+@using GlosApp.Models
+@inject ApplicationDbContext DbContext
+
+<div class="container">
+    <h3>Backoffice: Användarens Svar</h3>
+
+    @if (wordAnswers == null || !wordAnswers.Any())
+    {
+        <p>Inga svar har registrerats ännu.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Svenska</th>
+                    <th>Engelska/Spanska</th>
+                    <th>Användarens Svar</th>
+                    <th>Språk</th>
+                    <th>Tidsstämpel</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var answer in wordAnswers)
+                {
+                    // Kontrollera om användarens svar överensstämmer med det engelska/spanska ordet
+                    var isCorrect = answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true;
+
+                    <tr class="@(!isCorrect ? "table-danger" : "")">
+                        <!-- Applicerar röd bakgrund om svaret är felaktigt -->
+                        <td>@answer.Id</td>
+                        <td>@answer.Swedish</td>
+                        <td>@answer.English</td>
+                        <td>@answer.UserAnswer</td>
+                        <td>@answer.Language</td>
+                        <td>@answer.Timestamp</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private List<WordAnswer> wordAnswers;
+
+    protected override void OnInitialized()
+    {
+        // Hämta alla WordAnswer från databasen
+        wordAnswers = DbContext.WordAnswers.ToList();
+    }
+}
