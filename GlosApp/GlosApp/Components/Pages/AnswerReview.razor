@@ -13,30 +13,30 @@
     }
     else
     {
-        <table class="table table-striped">
+        <table class="table table-striped small">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Svenska</th>
+@*                     <th>Id</th>
+                    <th>Svenska</th> *@
                     <th>Engelska/Spanska</th>
                     <th>Användarens Svar</th>
-                    <th>Språk</th>
+                    @* <th>Språk</th> *@
                     <th>Tidsstämpel</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var answer in wordAnswers)
                 {
-                    // Kontrollera om användarens svar överensstämmer med det engelska/spanska ordet
+                    
                     var isCorrect = answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true;
 
                     <tr class="@(!isCorrect ? "table-danger" : "")">
-                        <!-- Applicerar röd bakgrund om svaret är felaktigt -->
-                        <td>@answer.Id</td>
-                        <td>@answer.Swedish</td>
+
+@*                         <td>@answer.Id</td>
+                        <td>@answer.Swedish</td> *@
                         <td>@answer.English</td>
                         <td>@answer.UserAnswer</td>
-                        <td>@answer.Language</td>
+                        @* <td>@answer.Language</td> *@
                         <td>@answer.Timestamp</td>
                     </tr>
                 }
@@ -50,7 +50,9 @@
 
     protected override void OnInitialized()
     {
-        // Hämta alla WordAnswer från databasen
-        wordAnswers = DbContext.WordAnswers.ToList();
+        wordAnswers = DbContext.WordAnswers
+                                .OrderByDescending(wa => wa.Timestamp)
+                                .ToList();
     }
 }
+

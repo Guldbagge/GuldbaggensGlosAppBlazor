@@ -94,8 +94,10 @@
 
         foreach (var answer in userAnswerForm.Answers)
         {
-            DbContext.WordAnswers.Add(new WordAnswer(answer.Swedish, answer.English)
+            DbContext.WordAnswers.Add(new WordAnswer
                 {
+                    Swedish = answer.Swedish,
+                    English = answer.English,
                     UserAnswer = answer.UserAnswer,
                     Language = "English"
                 });
@@ -104,6 +106,7 @@
         DbContext.SaveChanges();
         showResult = true;
     }
+
 
     private void ResetForm()
     {

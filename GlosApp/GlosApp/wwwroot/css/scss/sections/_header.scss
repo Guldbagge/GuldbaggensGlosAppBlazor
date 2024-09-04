@@ -1,49 +1,12 @@
-﻿/*.header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #F9A136;
-    height: 100px;
-
-    .logo {
-        margin-right: 0.5em;
-
-        img {
-            height: 75px;
-            border-radius: 3rem;
-        }
-    }
-
-    h1 {
-        margin-left: 1rem;
-        color: #194C67;
-        font-size: 1.5rem;
-        margin-bottom: 0;
-    }
-
-    @media (max-width: 1200px) {
-        height: 70px; // Ändra höjden på headern när skärmstorleken är under 1200px
-
-        .logo img {
-            height: 60px; // Ändra höjden på loggan när skärmstorleken är under 1200px
-        }
-
-        h1 {
-            font-size: 1.2rem; // Ändra fontstorleken på h1 när skärmstorleken är under 1200px
-        }
-    }
-}
-*/
-
+﻿
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-around; // Justerar så att innehållet sprids ut
+    justify-content: space-around; 
     background-color: #F9A136;
     height: 100px;
 
     .logo {
-        margin-right: 0.5em;
 
         img {
             height: 75px;
@@ -52,32 +15,33 @@
     }
 
     h1 {
-        margin-left: 1rem;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
         color: #194C67;
         font-size: 1.5rem;
         margin-bottom: 0;
     }
 
     .header-icon-link {
-        display: flex; // Gör att ikonen är centrerad inom länken
-        align-items: center; // Vertikalt centrerad
-        text-decoration: none; // Tar bort understrykning
-        color: inherit; // Behåller färgen på ikonen från dess föräldrar
+        display: flex; 
+        align-items: center; 
+        text-decoration: none; 
+        color: inherit; 
     }
 
     .header-icon {
-        font-size: 1.5rem; // Justera storleken på ikonen efter behov
+        font-size: 1.5rem; 
     }
 
     @media (max-width: 1200px) {
-        height: 70px; // Ändra höjden på headern när skärmstorleken är under 1200px
+        height: 70px; 
 
         .logo img {
-            height: 60px; // Ändra höjden på loggan när skärmstorleken är under 1200px
+            height: 60px; 
         }
 
         h1 {
-            font-size: 1.2rem; // Ändra fontstorleken på h1 när skärmstorleken är under 1200px
+            font-size: 1.2rem; 
         }
     }
 }
