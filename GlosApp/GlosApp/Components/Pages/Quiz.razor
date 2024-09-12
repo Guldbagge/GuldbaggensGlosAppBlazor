@@ -1,27 +1,32 @@
-﻿
-@page "/quiz"
+﻿@page "/quiz"
 @rendermode InteractiveServer
 @using System.Linq
 @using GlosApp.Models
 @inject ApplicationDbContext DbContext
 
+
+@using System.Text.Json
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
 <div class="container">
-    <h3>Quize</h3>
-    <p>Testa dina kunskaper genom att svara på frågorna nedan, Läs texten först och svara sedan A, B eller C på det du tror är rätt.</p>
-    <br/>
-    <h2>Den magiska skogen</h2>
+    <h2>Den förtrollade sjön</h2>
     <p>
-        I utkanten av byn fanns en skog som ingen vågade gå in i. Träden var höga och täta, och det kändes alltid som om någon eller något iakttog en. Men en dag bestämde sig Ella och hennes bästa vän Leo för att utforska skogen. De hade hört rykten om en gömd skatt och ville ta reda på om det var sant.
+        Djupt inne i skogen långt bortom stigarna som byborna brukade följa fanns en sjö som sades vara förtrollad. Ingen visste varför men de som närmade sig sjön kunde höra melodiska sånger, som om sjön själv sjöng.
     </p>
     <p>
-        När de gick djupare in i skogen började det bli mörkare, trots att det var mitt på dagen. Löven prasslade, och de hörde ett svagt muller som verkade komma från marken. Plötsligt såg de något som glittrade mellan träden. Leo gick närmare och ropade: "Jag tror att vi har hittat något!" Det var en gammal karta, inristad på en sten. Kartan visade vägen till en stor ek som enligt legenden vaktade skatten.
+        En dag bestämde sig syskonen Arvid och Sofia för att ta reda på sanningen om sjön. De packade sina väskor med mat och dryck och gav sig av i gryningen. När de närmade sig sjön började de höra de mystiska sångerna. Sofia rynkade pannan, men Arvid verkade fast besluten att gå närmare.
     </p>
     <p>
-        Ella och Leo följde kartan, och efter en stund stod de framför den stora eken. Trädet var enormt och såg väldigt gammalt ut. Men det var inte bara ett vanligt träd – runt stammen snurrade en svag, gyllene dimma, och marken under det verkade skimra. "Är det här?" frågade Ella, och Leo nickade. De började gräva vid trädets rötter, och efter en stunds arbete stötte de på något hårt. Det var en kista, täckt av lera och mossa. De öppnade den försiktigt och inuti fanns något de aldrig hade väntat sig – inte guld eller juveler, utan ett litet träd som verkade vara levande, trots att det var instängt i kistan.
+        Vid sjöns strand såg de något märkligt. I mitten av sjön på en liten ö fanns ett torn. "Det där tornet fanns inte på kartan", sa Sofia. Arvid tittade närmare och märkte att tornet var omringat av ett skimrande ljus.
     </p>
     <p>
-        "Ett magiskt träd!" utbrast Leo. "Vi måste ta hand om det!" Ella höll med, och de bestämde sig för att återvända till byn och plantera trädet. Men när de lämnade skogen kändes det som om något, eller någon, fortfarande följde dem.
+        "Vi måste ta oss dit", sa Arvid bestämt. De hittade en gammal roddbåt vid stranden och började ro mot tornet. Men ju närmare de kom desto starkare blev sångerna och vattnet runt omkring dem började bubbla. När de äntligen nådde tornet öppnades dörrarna av sig själv. Inuti fanns en spiraltrappa som ledde djupt ner i marken. Vad som väntade dem där var ett mysterium som ingen i byn någonsin hade löst.
     </p>
+
+    <div>
+        <img src="/images/quiz-forest.png" alt="Alternate Text" class="img-fluid rounded-lg" />
+    </div>
 
 
     <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
@@ -78,16 +83,13 @@
     {
         userAnswerForm.Answers = new List<WordAnswer>
     {
-            new WordAnswer("Vad hittade Ella och Leo i skogen? - A) En sko - B) Ett magiskt träd - C) En gammal tall", "B"),
-            new WordAnswer("Vad var speciellt med trädet de hittade? - A) Det var täckt av gyllene löv - B) Det vakade över en skatt - C) Det var instängt i en kista", "C"),
-            new WordAnswer("Hur kände sig Ella och Leo när de lämnade skogen? - A) De var glada och lättade - B) De kände sig bevakade - C) De var rädda för mörkret", "B"),
-            new WordAnswer("Vad bestämde sig Ella och Leo för att göra med det magiska trädet? - A) De lämnade det i skogen - B) De tog det hem för att plantera det - B) De gav det till byns äldste", "B"),
-            new WordAnswer("Ella och Leo gick in i skogen för att hitta: - A) En skatt - B) Ett hus - C) En ek", "A"),
-            new WordAnswer("Skatten de hittade var: - A) En gyllene kista - B) Ett litet magiskt träd - C) En sten med inristningar", "B")
-
+            new WordAnswer("Vad hörde Arvid och Sofia vid sjön? - A) Fåglar sjöng - B) Vinden susade - C) Mystiska sånger", "C"),
+            new WordAnswer("Vad märkte de på sjöns ö? - A) Ett hus - B) Ett torn omringat av ljus - C) Ett stort träd", "B"),
+            new WordAnswer("Hur tog de sig till tornet? - A) De simmade - B) De roddade dit med en båt - C) De gick runt sjön", "B"),
+            new WordAnswer("Vad fanns inuti tornet? - A) En spiraltrappa - B) En skatt - C) En drake", "A"),
+            new WordAnswer("Vad hände när de närmade sig tornet? - A) Vattnet började bubbla - B) Det blev dimmigt - C) Vinden ökade", "A")
     };
     }
-
 
     private void CheckAnswers()
     {
@@ -102,21 +104,8 @@
         correctAnswers = userAnswerForm.Answers.Count(answer =>
             answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
 
-        foreach (var answer in userAnswerForm.Answers)
-        {
-            DbContext.WordAnswers.Add(new WordAnswer
-                {
-                    Swedish = answer.Swedish,
-                    English = answer.English,
-                    UserAnswer = answer.UserAnswer,
-                    Language = "English"
-                });
-        }
-
-        DbContext.SaveChanges();
         showResult = true;
     }
-
 
     private void ResetForm()
     {
@@ -134,4 +123,5 @@
     {
         public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
     }
+
 }
