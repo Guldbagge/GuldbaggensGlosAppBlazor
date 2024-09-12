@@ -1,5 +1,5 @@
 ﻿@page "/AnswerReview"
-
+@attribute [Authorize]
 @rendermode InteractiveServer
 @using GlosApp.Models
 @inject ApplicationDbContext DbContext
@@ -16,27 +16,19 @@
         <table class="table table-striped small">
             <thead>
                 <tr>
-@*                     <th>Id</th>
-                    <th>Svenska</th> *@
                     <th>Facit</th>
                     <th>Svar</th>
-                    @* <th>Språk</th> *@
                     <th>Tidsstämpel</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var answer in wordAnswers)
                 {
-                    
                     var isCorrect = answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true;
 
                     <tr class="@(!isCorrect ? "table-danger" : "")">
-
-@*                         <td>@answer.Id</td>
-                        <td>@answer.Swedish</td> *@
                         <td>@answer.English</td>
                         <td>@answer.UserAnswer</td>
-                        @* <td>@answer.Language</td> *@
                         <td>@answer.Timestamp</td>
                     </tr>
                 }
@@ -44,6 +36,8 @@
         </table>
     }
 </div>
+
+
 
 @code {
     private List<WordAnswer> wordAnswers;
@@ -55,4 +49,3 @@
                                 .ToList();
     }
 }
-
