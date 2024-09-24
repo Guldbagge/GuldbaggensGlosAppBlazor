@@ -105,8 +105,38 @@
         correctAnswers = userAnswerForm.Answers.Count(answer =>
             answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
 
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            DbContext.WordAnswers.Add(new WordAnswer
+                {
+                    Swedish = answer.Swedish,
+                    English = answer.English,
+                    UserAnswer = answer.UserAnswer,
+                    Timestamp = answer.Timestamp,
+                    Language = "Quize"
+                });
+        }
+
+        DbContext.SaveChanges();
         showResult = true;
     }
+
+
+    // private void CheckAnswers()
+    // {
+    //     missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
+
+    //     if (missingAnswers)
+    //     {
+    //         showResult = false;
+    //         return;
+    //     }
+
+    //     correctAnswers = userAnswerForm.Answers.Count(answer =>
+    //         answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
+
+    //     showResult = true;
+    // }
 
     private void ResetForm()
     {

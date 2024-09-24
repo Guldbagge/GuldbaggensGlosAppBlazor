@@ -6,10 +6,14 @@
         </div>
     </NavLink>
     <h1>Guldbaggens GlosApp</h1>
-    
-    <NavLink href="/AnswerReview" class="header-icon-link">
-        <div class="header-icon">
-            <i class="fa-regular fa-user-check"></i>
-        </div>
-    </NavLink>
+
+    <AuthorizeView>
+        <Authorized>
+            <NavLink href="/AnswerReview" class="header-icon-link">
+                <div class="header-icon">
+                    <i class="fa-regular fa-user-check"></i>
+                </div>
+            </NavLink>
+        </Authorized>
+    </AuthorizeView>
 </div>

@@ -59,19 +59,22 @@
     protected override void OnInitialized()
     {
         userAnswerForm.Answers = new List<WordAnswer>
-        {
-            new WordAnswer("Vän", "Amigo", "Spanish"),
-            new WordAnswer("Sol", "Sol", "Spanish"),
-            new WordAnswer("Vatten", "Agua", "Spanish"),
-            new WordAnswer("Familj", "Familia", "Spanish"),
-            new WordAnswer("Skola", "Escuela", "Spanish"),
-            new WordAnswer("Färg", "Color", "Spanish"),
-            new WordAnswer("Mat", "Comida", "Spanish"),
-            new WordAnswer("Glädje", "Alegría", "Spanish"),
-            new WordAnswer("Kärlek", "Amor", "Spanish"),
-            new WordAnswer("Träd", "Árbol", "Spanish")
-        };
+{
+    new WordAnswer("Skolan", "El colegio", "Spanish"),
+    new WordAnswer("Hon studerar", "Estudia", "Spanish"),
+    new WordAnswer("Pojken", "El chico", "Spanish"),
+    new WordAnswer("Flickan", "La chica", "Spanish"),
+    new WordAnswer("Många", "Muchos", "Spanish"),
+    new WordAnswer("Olika", "Diferentes", "Spanish"),
+    new WordAnswer("Hon är inte från Sverige", "No es de Suecia", "Spanish"),
+    new WordAnswer("Elenas mamma", "La madre de Elena", "Spanish"),
+    new WordAnswer("Hennes mamma", "Su madre", "Spanish"),
+    new WordAnswer("Pappa", "Padre", "Spanish"),
+    new WordAnswer("Han jobbar på sjukhuset", "Trabaja en el hospital", "Spanish")
+};
+
     }
+
 
     private void CheckAnswers()
     {
@@ -84,7 +87,7 @@
         }
 
         correctAnswers = userAnswerForm.Answers.Count(answer =>
-            answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
+            NormalizeAnswer(answer.UserAnswer).Equals(NormalizeAnswer(answer.English), StringComparison.OrdinalIgnoreCase));
 
         foreach (var answer in userAnswerForm.Answers)
         {
@@ -93,13 +96,19 @@
                     Swedish = answer.Swedish,
                     English = answer.English,
                     UserAnswer = answer.UserAnswer,
-                    Language = "English"
+                    Language = "Spanish"
                 });
         }
 
         DbContext.SaveChanges();
         showResult = true;
     }
+
+    private string NormalizeAnswer(string answer)
+    {
+        return string.Join(" ", answer?.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>());
+    }
+
 
 
     private void ResetForm()

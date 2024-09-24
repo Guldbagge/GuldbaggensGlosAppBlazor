@@ -18,7 +18,8 @@
                 <tr>
                     <th>Facit</th>
                     <th>Svar</th>
-                    <th>Tidsstämpel</th>
+                    <th>Tid</th>
+                    <th>Vad</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,7 +30,8 @@
                     <tr class="@(!isCorrect ? "table-danger" : "")">
                         <td>@answer.English</td>
                         <td>@answer.UserAnswer</td>
-                        <td>@answer.Timestamp</td>
+                        <td>@answer.Timestamp.ToString("yyMMdd HH:mm")</td>
+                        <td>@answer.Language</td>
                     </tr>
                 }
             </tbody>
