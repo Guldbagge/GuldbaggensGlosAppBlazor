@@ -1,0 +1,60 @@
+﻿@page "/edvin"
+
+
+@{
+
+
+}
+
+
+@{
+
+
+    // Definiera en enkel modell för projekten
+    var projects = new List<dynamic>
+    {
+        new { Title = "Project 1", Description = "Description for Project 1", ImageUrl = "/images/cat.jpg", Link = "/project1" },
+        new { Title = "Project 2", Description = "Description for Project 2", ImageUrl = "/images/horse.jpg", Link = "/project2" },
+        new { Title = "Project 3", Description = "Description for Project 3", ImageUrl = "/images/spanish.jpg", Link = "/project3" },
+        new { Title = "Project 4", Description = "Description for Project 4", ImageUrl = "/images/hors.jpg", Link = "/project4" }
+    };
+}
+
+
+<div id="projectsCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        @for (int i = 0; i < projects.Count; i += 2)
+        {
+            <div class="carousel-item @(i == 0 ? "active" : "")">
+                <div class="row">
+                    @for (int j = i; j < i + 2 && j < projects.Count; j++)
+                    {
+                        <div class="col-12 col-md-6">
+                            <div class="card">
+                                <img src="@projects[j].ImageUrl" class="card-img-top" alt="@projects[j].Title">
+                                <div class="card-body">
+                                    <h5 class="card-title">@projects[j].Title</h5>
+                                    <p class="card-text">@projects[j].Description</p>
+                                    <a href="@projects[j].Link" class="btn btn-primary">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <!-- Carousel controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#projectsCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#projectsCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+
+
+
