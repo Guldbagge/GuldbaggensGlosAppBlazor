@@ -9,11 +9,13 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
+    <Content Remove="Components\Pages\Quiz-Economy.razor" />
     <Content Remove="wwwroot\css\scss\sections\_alma.scss" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="compilerconfig.json" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Quiz-Economy.razor" />
     <_ContentIncludedByDefault Remove="wwwroot\css\scss\sections\_alma.scss" />
   </ItemGroup>
 
@@ -42,7 +44,12 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
+    <None Include="Components\Pages\Quiz-Economy.razor" />
     <None Include="wwwroot\css\scss\sections\_alma.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Quiz-Economy.razor" />
   </ItemGroup>
 
 </Project>

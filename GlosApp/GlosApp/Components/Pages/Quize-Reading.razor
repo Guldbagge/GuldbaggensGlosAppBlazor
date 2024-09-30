@@ -1,0 +1,159 @@
+﻿@page "/quiz-reading"
+@rendermode InteractiveServer
+@using System.Linq
+@using GlosApp.Models
+@inject ApplicationDbContext DbContext
+
+@using System.Text.Json
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<div class="container">
+    <h2>Vetenskapskvinnan Sofias äventyr</h2>
+    <p>
+        Sofia var en framstående vetenskapskvinna känd för sina upptäckter inom astrobiologi och sitt mod att utforska okända platser. Hon hade hört om en mystisk skog där växter kunde lysa i mörkret och djur kunde tala. Fylld av nyfikenhet bestämde hon sig för att undersöka platsen.
+    </p>
+    <p>
+        En kall höstmorgon packade Sofia sin ryggsäck med vetenskaplig utrustning, anteckningsblock och provrör. Hennes mål var att dokumentera allt märkligt hon kunde hitta. Hon tog med sig en vän, Arvid, en lokal guide som kände till skogen väl men som var skeptisk till berättelserna.
+    </p>
+    <p>
+        När de kommit in i skogen lade de märke till att luften var fylld av en söt doft och att marken var täckt av små, lysande blommor. Sofia tog genast fram sin kamera och började dokumentera det hela. "Det här måste vara en okänd form av bioluminiscens", sa hon exalterat.
+    </p>
+    <p>
+        Ju längre de gick, desto märkligare blev omgivningen. Träden började röra sig som om de hade ett eget liv och de kunde höra viskande röster i vinden. Arvid blev nervös och ville vända tillbaka, men Sofia insisterade på att fortsätta. "Vi är så nära att göra en historisk upptäckt", sa hon.
+    </p>
+    <p>
+        Plötsligt såg de en stor skugga röra sig mellan träden. Det var en enorm varelse som liknade en blandning av en varg och en björn, men med fjäderklädda vingar. "Det där är omöjligt!", utbrast Arvid. "Inget sådant djur kan finnas."
+    </p>
+    <p>
+        Sofia var förbluffad men inte rädd. Hon tog fram sitt anteckningsblock och började skissa varelsen. "Det här är ett bevis på att vår förståelse av naturen är långt ifrån komplett", sa hon. Varelsen närmade sig, men verkade inte aggressiv. Istället satte den sig ned och betraktade dem med sina stora, kloka ögon.
+    </p>
+    <p>
+        Sofia och Arvid bestämde sig för att följa efter varelsen. Den ledde dem till en glänta där ett litet, övergivet laboratorium stod. Inuti fanns gamla dokument och utrustning som verkade tillhöra en forskare som hade bott där för många år sedan. Sofia började läsa igenom dokumenten och upptäckte att forskaren hade försökt skapa en serum som kunde förbättra intelligensen hos djur.
+    </p>
+    <p>
+        "Det förklarar varför djuren i denna skog är så unika", sa Sofia. Men hon var också orolig. "Om detta serum hamnar i fel händer, kan det bli farligt", fortsatte hon. De bestämde sig för att samla in alla dokument och ta dem tillbaka till staden för att förhindra att någon annan hittade dem.
+    </p>
+    <p>
+        När de återvände till skogskanten såg de att varelsen hade följt med dem. Den sträckte fram en stor tass, och Sofia kände en värme spridas i hjärtat. Hon insåg att djuret förstod deras avsikt och ville tacka dem för att de skyddade skogens hemligheter. De vände tillbaka till staden med en känsla av att ha gjort en skillnad, och Sofia skrev en vetenskaplig artikel om sina upptäckter, utan att avslöja skogens exakta plats.
+    </p>
+    <p>
+        "Det finns så mycket mer att upptäcka där ute", sa hon till Arvid när de satt på tåget hem. "Och det är vårt ansvar att skydda det vi inte helt förstår."
+    </p>
+
+    <div>
+        <img src="/images/quiz-forest.png" alt="Alternate Text" class="img-fluid rounded-lg" />
+    </div>
+    <br />
+
+    <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
+        @foreach (var answer in userAnswerForm.Answers)
+        {
+            <div class="form-group">
+                <label>@answer.Swedish</label>
+                <InputText @bind-Value="answer.UserAnswer" class="form-control" autocomplete="off" />
+                @if (showResult)
+                {
+                    if (string.IsNullOrWhiteSpace(answer.UserAnswer))
+                    {
+                        <span class="text-warning">⚠️ Detta fält är tomt.</span>
+                    }
+                    else if (answer.UserAnswer.Equals(answer.English, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <span class="text-success">✔️ Rätt!</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">❌ Fel, rätt svar är "@answer.English".</span>
+                    }
+                }
+            </div>
+        }
+
+        @if (showResult)
+        {
+            <div class="alert alert-info">
+                Du fick @correctAnswers av @userAnswerForm.Answers.Count ord rätt!
+            </div>
+        }
+
+        @if (missingAnswers)
+        {
+            <div class="alert alert-warning">
+                Du måste fylla i alla fält innan du kan kontrollera dina svar.
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Kontrollera svar</button>
+        <button type="button" class="btn btn-success" @onclick="ResetForm">Rensa quizformuläret</button>
+    </EditForm>
+
+</div>
+
+@code {
+    private UserAnswerForm userAnswerForm = new UserAnswerForm();
+    private int correctAnswers = 0;
+    private bool showResult = false;
+    private bool missingAnswers = false;
+
+    protected override void OnInitialized()
+    {
+        userAnswerForm.Answers = new List<WordAnswer>
+        {
+            new WordAnswer("Vad studerade Sofia? - A) Matematik - B) Astrobiologi - C) Fysik", "B"),
+            new WordAnswer("Vad upptäckte Sofia i skogen? - A) Lysande blommor - B) Ett stort vattenfall - C) En övergiven stuga", "A"),
+            new WordAnswer("Vad var unikt med djuren i skogen? - A) De kunde tala - B) De hade fjädrar - C) De kunde flyga", "A"),
+            new WordAnswer("Vad fanns inuti laboratoriet? - A) En karta - B) Gamla dokument - C) En kista", "B"),
+            new WordAnswer("Vad hände när Sofia och Arvid lämnade skogen? - A) Djuret följde med dem - B) Skogen försvann - C) Det började regna", "A"),
+            new WordAnswer("Vad gjorde Sofia när de kom tillbaka till staden? - A) Brände dokumenten - B) Berättade för byborna - C) Skrev en vetenskaplig artikel", "C"),
+            new WordAnswer("Vad ville djuret tacka dem för? - A) För att de matade det - B) För att de skyddade skogens hemligheter - C) För att de tog med det till staden", "B"),
+        };
+    }
+
+    private void CheckAnswers()
+    {
+        missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
+
+        if (missingAnswers)
+        {
+            showResult = false;
+            return;
+        }
+
+        correctAnswers = userAnswerForm.Answers.Count(answer =>
+            answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
+
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            DbContext.WordAnswers.Add(new WordAnswer
+                {
+                    Swedish = answer.Swedish,
+                    English = answer.English,
+                    UserAnswer = answer.UserAnswer,
+                    Timestamp = answer.Timestamp,
+                    Language = "Quiz"
+                });
+        }
+
+        DbContext.SaveChanges();
+        showResult = true;
+    }
+
+    private void ResetForm()
+    {
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            answer.UserAnswer = string.Empty;
+        }
+
+        correctAnswers = 0;
+        showResult = false;
+        missingAnswers = false;
+    }
+
+    public class UserAnswerForm
+    {
+        public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
+    }
+
+}

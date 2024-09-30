@@ -1,0 +1,120 @@
+﻿@page "/quiz-economy"
+@rendermode InteractiveServer
+@using System.Linq
+@using GlosApp.Models
+@inject ApplicationDbContext DbContext
+
+<div class="container">
+    <h2>Läxa v.40 - Hushållsekonomi</h2>
+
+    <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
+        @foreach (var answer in userAnswerForm.Answers)
+        {
+            <div class="form-group">
+                <label>@answer.Swedish</label>
+                <InputText @bind-Value="answer.UserAnswer" class="form-control" autocomplete="off" />
+                @if (showResult)
+                {
+                    if (string.IsNullOrWhiteSpace(answer.UserAnswer))
+                    {
+                        <span class="text-warning">⚠️ Detta fält är tomt.</span>
+                    }
+                    else if (answer.UserAnswer.Equals(answer.English, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <span class="text-success">✔️ Rätt!</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">❌ Fel, rätt svar är "@answer.English".</span>
+                    }
+                }
+            </div>
+        }
+
+        @if (showResult)
+        {
+            <div class="alert alert-info">
+                Du fick @correctAnswers av @userAnswerForm.Answers.Count rätt!
+            </div>
+        }
+
+        @if (missingAnswers)
+        {
+            <div class="alert alert-warning">
+                Du måste fylla i alla fält innan du kan kontrollera dina svar.
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Kontrollera svar</button>
+        <button type="button" class="btn btn-success" @onclick="ResetForm">Rensa quizformuläret</button>
+    </EditForm>
+</div>
+
+@code {
+    private UserAnswerForm userAnswerForm = new UserAnswerForm();
+    private int correctAnswers = 0;
+    private bool showResult = false;
+    private bool missingAnswers = false;
+
+    protected override void OnInitialized()
+    {
+        userAnswerForm.Answers = new List<WordAnswer>
+        {
+            new WordAnswer("Vad är ett hushåll? - A) En grupp personer som bor tillsammans - B) Ett företag - C) En individ", "A"),
+            new WordAnswer("Vad är lön? - A) Pengar man betalar i skatt - B) Ersättning för arbete - C) Pengar man får i bidrag", "B"),
+            new WordAnswer("Vad är inkomst? - A) Pengar som går ut ur hushållet - B) Pengar som kommer in till hushållet - C) Pengar man betalar i ränta", "B"),
+            new WordAnswer("Vad är en utgift? - A) Pengar som kommer in - B) Kostnad för att låna pengar - C) Pengar som går ut", "C"),
+            new WordAnswer("Vad är ränta? - A) Kostnad för att låna pengar - B) Beräkning av inkomster och utgifter - C) En summa pengar från kommunen", "A"),
+            new WordAnswer("Vad är budget? - A) Beräkning av framtida inkomster och utgifter - B) Pengar som går till staten - C) Pengar som betalas som hyra", "A"),
+            new WordAnswer("Vad är bidrag? - A) Ersättning för ett arbete - B) Pengar man får från kommunen för att betala utgifter - C) Kostnad för lån", "B"),
+            new WordAnswer("Vad beskriver levnadsstandard? - A) Vad man betalar i skatt - B) Inkomster för att täcka vardagskostnader - C) Kostnad för hyra", "B"),
+            new WordAnswer("Vad är hyra? - A) Kostnad för att bo i en lägenhet - B) Kostnad för att låna pengar - C) Ett bidrag från staten", "A")
+        };
+    }
+
+    private void CheckAnswers()
+    {
+        missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
+
+        if (missingAnswers)
+        {
+            showResult = false;
+            return;
+        }
+
+        correctAnswers = userAnswerForm.Answers.Count(answer =>
+            answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
+
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            DbContext.WordAnswers.Add(new WordAnswer
+                {
+                    Swedish = answer.Swedish,
+                    English = answer.English,
+                    UserAnswer = answer.UserAnswer,
+                    Timestamp = answer.Timestamp,
+                    Language = "Quiz"
+                });
+        }
+
+        DbContext.SaveChanges();
+        showResult = true;
+    }
+
+    private void ResetForm()
+    {
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            answer.UserAnswer = string.Empty;
+        }
+
+        correctAnswers = 0;
+        showResult = false;
+        missingAnswers = false;
+    }
+
+    public class UserAnswerForm
+    {
+        public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
+    }
+}
