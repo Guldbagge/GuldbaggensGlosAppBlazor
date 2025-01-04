@@ -2,7 +2,7 @@
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-around; 
+    justify-content: space-around;
     background-color: #F9A136;
     height: 100px;
 
@@ -14,34 +14,71 @@
         }
     }
 
-    h1 {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-        color: #194C67;
+    .text h1 {
         font-size: 1.5rem;
-        margin-bottom: 0;
+        font-weight: 700;
+        color: #333;
+        animation: fadeInDown 1s ease-in-out;
+        border: none; /* Tar bort eventuell kant */
+        outline: none; /* Tar bort eventuell fokusram */
+        background: none; /* Tar bort bakgrund */
+        padding: 0; /* Tar bort eventuell inre marginal */
+        margin: 0; /* Tar bort yttre marginal */
     }
 
+
+    .text h2 {
+        font-size: 0.8rem;
+        color: #777;
+        animation: fadeInUp 1s ease-in-out;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+
+
     .header-icon-link {
-        display: flex; 
-        align-items: center; 
-        text-decoration: none; 
-        color: inherit; 
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
     }
 
     .header-icon {
-        font-size: 1.5rem; 
+        font-size: 1.5rem;
     }
 
     @media (max-width: 1200px) {
-        height: 70px; 
+        height: 70px;
 
         .logo img {
-            height: 60px; 
+            height: 60px;
         }
 
         h1 {
-            font-size: 1.2rem; 
+            font-size: 1.2rem;
         }
     }
 }

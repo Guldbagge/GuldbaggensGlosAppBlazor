@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlosApp", "GlosApp\GlosApp\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlosApp.Client", "GlosApp\GlosApp.Client\GlosApp.Client.csproj", "{C71F59E4-8386-42F5-A113-E4A0EBF62187}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlosApp.Tests", "GlosApp.Tests\GlosApp.Tests.csproj", "{F0A23537-DD48-4DC2-90C4-2C21A15FC7C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C71F59E4-8386-42F5-A113-E4A0EBF62187}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C71F59E4-8386-42F5-A113-E4A0EBF62187}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C71F59E4-8386-42F5-A113-E4A0EBF62187}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0A23537-DD48-4DC2-90C4-2C21A15FC7C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0A23537-DD48-4DC2-90C4-2C21A15FC7C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0A23537-DD48-4DC2-90C4-2C21A15FC7C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0A23537-DD48-4DC2-90C4-2C21A15FC7C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
