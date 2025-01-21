@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background-color: #F9A136;
+    background-color: #4B0082;
     height: 100px;
 
     .logo {
@@ -17,7 +17,7 @@
     .text h1 {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #333;
+        color: #E6E6FA;
         animation: fadeInDown 1s ease-in-out;
         border: none; /* Tar bort eventuell kant */
         outline: none; /* Tar bort eventuell fokusram */
@@ -29,7 +29,7 @@
 
     .text h2 {
         font-size: 0.8rem;
-        color: #777;
+        color: #D8BFD8;
         animation: fadeInUp 1s ease-in-out;
     }
 

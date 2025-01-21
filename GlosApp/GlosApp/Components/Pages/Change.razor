@@ -1,0 +1,298 @@
+﻿
+@page "/admin/words"
+@using GlosApp.Models
+@inject ApplicationDbContext DbContext
+@rendermode InteractiveServer
+
+<h3>Hantera Glosor</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="ShowAddModal">Lägg till nytt ord</button>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Svenska</th>
+            <th>Engelska</th>
+            <th>Åtgärder</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var word in Words)
+        {
+            <tr>
+                <td>@word.Swedish</td>
+                <td>@word.English</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" @onclick="() => EditWord(word)">Redigera</button>
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteWord(word.Id)">Ta bort</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<EditForm Model="EditingWord" OnValidSubmit="SaveWord" novalidate>
+    <div class="modal @(ShowModal ? "show d-block" : "d-none")">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>@(IsEditMode ? "Redigera ord" : "Lägg till ord")</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="swedish">Svenska</label>
+                        <InputText id="swedish" @bind-Value="EditingWord.Swedish" class="form-control" />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="english">Engelska</label>
+                        <InputText id="english" @bind-Value="EditingWord.English" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Avbryt</button>
+                    <button type="submit" class="btn btn-primary">Spara</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private List<WordAnswer> Words = new();
+    private WordAnswer EditingWord = new();
+    private bool ShowModal = false;
+    private bool IsEditMode = false;
+
+    protected override void OnInitialized()
+    {
+        LoadWords();
+    }
+
+    private void LoadWords()
+    {
+        Words = DbContext.WordAnswers.ToList();
+    }
+    private void ShowAddModal()
+    {
+        EditingWord = new WordAnswer
+            {
+                Language = "English", // Standardvärde för Language
+                UserAnswer = string.Empty // Standardvärde för UserAnswer
+            };
+        IsEditMode = false;
+        ShowModal = true;
+    }
+
+
+
+    private void EditWord(WordAnswer word)
+    {
+        EditingWord = new WordAnswer
+            {
+                Id = word.Id,
+                Swedish = word.Swedish,
+                English = word.English,
+                Language = "Test" // Hårdkoda språket  "Test"
+            };
+        IsEditMode = true;
+        ShowModal = true;
+    }
+
+
+    private void SaveWord()
+    {
+        if (string.IsNullOrWhiteSpace(EditingWord.Swedish) || string.IsNullOrWhiteSpace(EditingWord.English))
+        {
+            // Handle validation or show an error message to user.
+            return;
+        }
+
+        if (IsEditMode)
+        {
+            var existingWord = DbContext.WordAnswers.FirstOrDefault(w => w.Id == EditingWord.Id);
+            if (existingWord != null)
+            {
+                existingWord.Swedish = EditingWord.Swedish;
+                existingWord.English = EditingWord.English;
+                existingWord.Language = EditingWord.Language;
+                DbContext.WordAnswers.Update(existingWord);
+            }
+        }
+        else
+        {
+            DbContext.WordAnswers.Add(EditingWord);
+        }
+
+        DbContext.SaveChanges();
+        LoadWords();
+        CloseModal();
+    }
+
+    private void DeleteWord(int id)
+    {
+        var word = DbContext.WordAnswers.FirstOrDefault(w => w.Id == id);
+        if (word != null)
+        {
+            DbContext.WordAnswers.Remove(word);
+            DbContext.SaveChanges();
+            LoadWords();
+        }
+    }
+
+    private void CloseModal()
+    {
+        ShowModal = false;
+        EditingWord = new WordAnswer(); // Reset EditingWord after modal close
+    }
+}
+
+
+
+
+@* @attribute [Authorize]
+@using GlosApp.Models
+@inject ApplicationDbContext DbContext
+@inject NavigationManager NavigationManager
+
+<h3>Hantera Glosor</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="ShowAddModal">Lägg till nytt ord</button>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Svenska</th>
+            <th>Engelska</th>
+            <th>Åtgärder</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var word in Words)
+        {
+            <tr>
+                <td>@word.Swedish</td>
+                <td>@word.English</td>
+                <td>
+                    <button class="btn btn-sm btn-warning" @onclick="() => EditWord(word)">Redigera</button>
+                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteWord(word.Id)">Ta bort</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<EditForm Model="EditingWord" OnValidSubmit="SaveWord">
+    <div class="modal @(ShowModal ? "show" : "")" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(IsEditMode ? "Redigera ord" : "Lägg till ord")</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="swedish">Svenska</label>
+                        <InputText id="swedish" @bind-Value="EditingWord.Swedish" class="form-control" />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="english">Engelska</label>
+                        <InputText id="english" @bind-Value="EditingWord.English" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Avbryt</button>
+                    <button type="submit" class="btn btn-primary">@((IsEditMode ? "Spara ändringar" : "Lägg till"))</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private List<WordAnswer> Words = new();
+    private WordAnswer EditingWord = new();
+    private bool ShowModal = false;
+    private bool IsEditMode = false;
+
+    protected override void OnInitialized()
+    {
+        LoadWords();
+    }
+
+    private void LoadWords()
+    {
+        Words = DbContext.WordAnswers.ToList();
+    }
+
+    private void ShowAddModal()
+    {
+        Console.WriteLine("Add Modal clicked");
+        EditingWord = new WordAnswer();
+        IsEditMode = false;
+        ShowModal = true;
+    }
+
+    private void EditWord(WordAnswer word)
+    {
+        Console.WriteLine($"Edit Word clicked for {word.Swedish}");
+        EditingWord = new WordAnswer
+            {
+                Id = word.Id,
+                Swedish = word.Swedish,
+                English = word.English
+            };
+        IsEditMode = true;
+        ShowModal = true;
+    }
+
+    private void SaveWord()
+    {
+        if (EditingWord.Swedish == null || EditingWord.English == null)
+        {
+            Console.WriteLine("Word is missing either Swedish or English");
+            return;
+        }
+
+        if (IsEditMode)
+        {
+            var existingWord = DbContext.WordAnswers.FirstOrDefault(w => w.Id == EditingWord.Id);
+            if (existingWord != null)
+            {
+                existingWord.Swedish = EditingWord.Swedish;
+                existingWord.English = EditingWord.English;
+                DbContext.WordAnswers.Update(existingWord);
+            }
+        }
+        else
+        {
+            DbContext.WordAnswers.Add(EditingWord);
+        }
+
+        DbContext.SaveChanges();
+        LoadWords();
+        CloseModal();
+    }
+
+    private void DeleteWord(int id)
+    {
+        var word = DbContext.WordAnswers.FirstOrDefault(w => w.Id == id);
+        if (word != null)
+        {
+            DbContext.WordAnswers.Remove(word);
+            DbContext.SaveChanges();
+            LoadWords();
+        }
+    }
+
+    private void CloseModal()
+    {
+        ShowModal = false;
+        EditingWord = new WordAnswer();
+    }
+}
+ *@

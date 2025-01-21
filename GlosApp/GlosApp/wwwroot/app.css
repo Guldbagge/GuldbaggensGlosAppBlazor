@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: #F9A136;
+  background-color: #4B0082;
   height: 100px;
 }
 .header .logo img {
@@ -13,7 +13,7 @@
 .header .text h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #333;
+  color: #E6E6FA;
   animation: fadeInDown 1s ease-in-out;
   border: none; /* Tar bort eventuell kant */
   outline: none; /* Tar bort eventuell fokusram */
@@ -23,7 +23,7 @@
 }
 .header .text h2 {
   font-size: 0.8rem;
-  color: #777;
+  color: #D8BFD8;
   animation: fadeInUp 1s ease-in-out;
 }
 @keyframes fadeInDown {
@@ -71,8 +71,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #194C67;
-  color: azure;
+  background-color: #6A3D9D;
+  color: #D3D3D3;
   height: 60px;
   width: 100%;
   /*display: none;*/ /* Dölj fottern som standard */
@@ -89,7 +89,7 @@
 }
 
 main .wrapper {
-  background-color: #CEDCDF;
+  background-color: #E6C9FF;
   display: flex;
   justify-content: start;
   align-items: center;
@@ -143,7 +143,7 @@ main .wrapper .carousel img {
   }
 }
 main .wave-bg {
-  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 220"%3E%3Cpath fill="%23CEDCDF" fill-opacity="1" d="M0,64L48,85.3C96,107,192,149,288,149.3C384,149,480,107,576,106.7C672,107,768,149,864,165.3C960,181,1056,171,1152,149.3C1248,128,1344,85,1392,64L1440,42L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"%3E%3C/path%3E%3C/svg%3E');
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 220"%3E%3Cpath fill="%236A3D9D" fill-opacity="0.6" d="M0,64L48,85.3C96,107,192,149,288,149.3C384,149,480,107,576,106.7C672,107,768,149,864,165.3C960,181,1056,171,1152,149.3C1248,128,1344,85,1392,64L1440,42L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"%3E%3C/path%3E%3C/svg%3E');
   background-size: cover;
   background-position: center;
   display: flex;
@@ -159,6 +159,7 @@ main .wave-bg .container {
 @media (min-width: 1200px) {
   main .wave-bg .container {
     flex-direction: row;
+    margin-top: 0rem;
   }
 }
 main .wave-bg .container .btn {
