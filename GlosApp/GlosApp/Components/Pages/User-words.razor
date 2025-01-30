@@ -1,64 +1,67 @@
 ﻿
-@page "/admin/words"
+@page "/user/words"
 @using GlosApp.Models
 @inject ApplicationDbContext DbContext
 @rendermode InteractiveServer
 
-<h3>Hantera Glosor</h3>
+<div class="container">
 
-<div class="mb-3">
-    <button class="btn btn-primary" @onclick="ShowAddModal">Lägg till nytt ord</button>
-</div>
+    <h3>Hantera Dina Egna Glosor</h3>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Svenska</th>
-            <th>Engelska</th>
-            <th>Åtgärder</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var word in Words)
-        {
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="ShowAddModal">Lägg till nytt ord</button>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@word.Swedish</td>
-                <td>@word.English</td>
-                <td>
-                    <button class="btn btn-warning btn-sm" @onclick="() => EditWord(word)">Redigera</button>
-                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteWord(word.Id)">Ta bort</button>
-                </td>
+                <th>Svenska</th>
+                <th>Engelska</th>
+                <th>Åtgärder</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var word in Words)
+            {
+                <tr>
+                    <td>@word.Swedish</td>
+                    <td>@word.English</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" @onclick="() => EditWord(word)">Redigera</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteWord(word.Id)">Ta bort</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<EditForm Model="EditingWord" OnValidSubmit="SaveWord" novalidate>
-    <div class="modal @(ShowModal ? "show d-block" : "d-none")">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5>@(IsEditMode ? "Redigera ord" : "Lägg till ord")</h5>
-                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group mb-3">
-                        <label for="swedish">Svenska</label>
-                        <InputText id="swedish" @bind-Value="EditingWord.Swedish" class="form-control" />
+    <EditForm Model="EditingWord" OnValidSubmit="SaveWord" novalidate>
+        <div class="modal @(ShowModal ? "show d-block" : "d-none")">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>@(IsEditMode ? "Redigera ord" : "Lägg till ord")</h5>
+                        <button type="button" class="btn-close" @onclick="CloseModal"></button>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="english">Engelska</label>
-                        <InputText id="english" @bind-Value="EditingWord.English" class="form-control" />
+                    <div class="modal-body">
+                        <div class="form-group mb-3">
+                            <label for="swedish">Svenska</label>
+                            <InputText id="swedish" @bind-Value="EditingWord.Swedish" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="english">Engelska</label>
+                            <InputText id="english" @bind-Value="EditingWord.English" class="form-control" />
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CloseModal">Avbryt</button>
-                    <button type="submit" class="btn btn-primary">Spara</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseModal">Avbryt</button>
+                        <button type="submit" class="btn btn-primary">Spara</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</EditForm>
+    </EditForm>
+</div>
 
 @code {
     private List<WordAnswer> Words = new();
@@ -73,13 +76,13 @@
 
     private void LoadWords()
     {
-        Words = DbContext.WordAnswers.ToList();
+        Words = DbContext.WordAnswers.Where(w => w.Language == "Test").ToList();
     }
     private void ShowAddModal()
     {
         EditingWord = new WordAnswer
             {
-                Language = "English", // Standardvärde för Language
+                Language = "Test", // Standardvärde för Language
                 UserAnswer = string.Empty // Standardvärde för UserAnswer
             };
         IsEditMode = false;

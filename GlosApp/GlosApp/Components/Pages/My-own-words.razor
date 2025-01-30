@@ -1,12 +1,11 @@
-﻿
-@page "/newword"
+﻿@page "/my-own-words"
 @rendermode InteractiveServer
 @using System.Linq
 @using GlosApp.Models
 @inject ApplicationDbContext DbContext
 
 <div class="container">
-    <h3>Glosformulär Engelska</h3>
+    <h3>Mina egna glossor</h3>
 
     <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
         @if (IsLoading)
@@ -52,8 +51,8 @@
                 </div>
             }
 
-            <button type="submit" class="btn btn-primary">Kontrollera svar</button>
-            <button type="button" class="btn btn-success" @onclick="ResetForm">Rensa glosformuläret</button>
+            <button type="submit" class="btn btn-primary mt-4">Kontrollera svar</button>
+            <button type="button" class="btn btn-success mt-4" @onclick="ResetForm">Rensa glosformuläret</button>
         }
     </EditForm>
 </div>
@@ -73,7 +72,7 @@
     private void LoadWords()
     {
         // Hämta orden från databasen
-        var words = DbContext.WordAnswers.Where(w => w.Language == "English").ToList();
+        var words = DbContext.WordAnswers.Where(w => w.Language == "Test").ToList();
         userAnswerForm.Answers = words.Select(w => new WordAnswer
             {
                 Id = w.Id,

@@ -1,8 +1,17 @@
-﻿<div class="footer">
-    <div>Elevate Your Learning with Pluggat.se</div>
+﻿@inject NavigationManager NavManager
+
+<div class="main-content">
+    @ChildContent
 </div>
 
+@if (!NavManager.Uri.Contains("/my-own-words") && !NavManager.Uri.Contains("/user/words"))
+{
+    <div class="footer">
+        <div>Elevate Your Learning with Pluggat.se</div>
+    </div>
+}
 
 @code {
-
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
 }
