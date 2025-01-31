@@ -54,10 +54,11 @@
             <NavLink href="quiz" class="btn btn-primary">Quiz</NavLink>
             <NavLink href="/user/words" class="btn btn-primary">Create</NavLink>
             <NavLink href="/my-own-words" class="btn btn-primary">My Own</NavLink>
+            <NavLink href="/ai" class="btn btn-primary">Ask AI</NavLink>
          @*    <NavLink href="/Spanish" class="btn btn-primary">Spanska</NavLink> *@
         </div>
 
-        <div class="carousel slide" id="horseCarousel" data-ride="carousel" data-interval="6000">
+        <div class="carousel slide d-none d-md-block" id="horseCarousel" data-ride="carousel" data-interval="6000">
             <div class="carousel-inner">
                 @if (horseImageUrls.Any())
                 {

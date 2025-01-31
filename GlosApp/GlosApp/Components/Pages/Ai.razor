@@ -2,27 +2,34 @@
 @inject ILogger<Ai> Logger
 @rendermode InteractiveServer
 
+<h2 class="text-center my-4">🤖 AI Support</h2>
 
-<h3>AI Support</h3>
+<div class="robot-avatar"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712105.png" alt="AI Bot" /></div>
+<div class="chat-container">
+    <!-- Robot Avatar -->
+    <div class="robot-container">
+@*         <img src="robot.png" alt="AI Bot" class="robot-avatar" /> *@
+       
+        <p class="robot-text">Hej! Ställ en fråga så ska jag försöka hjälpa dig. 😊</p>
+    </div>
 
-<button class="btn btn-primary" @onclick="GetAIResponse" disabled="@isLoading">
-    @if (isLoading)
-    {
-        <span>Väntar på AI...</span>
-    }
-    else
-    {
-        <span>Få AI-svar</span>
-    }
-</button>
+    <div class="chat-box">
+        <AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
+    </div>
 
-<AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
+    <div class="input-group mt-3">
+        <input type="text" class="form-control" @bind="userMessage" placeholder="Skriv din fråga här..." />
+        <button class="btn btn-primary ms-2 px-4" @onclick="GetAIResponse" disabled="@isLoading">
+            @(isLoading ? "Väntar..." : "Skicka fråga")
+        </button>
+    </div>
+</div>
 
 @code {
     private bool isLoading = false;
-    private string userMessage = "Varför ska man ha engelska i skolan?";
-    private string apiToken = "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"; // Flytta detta till en säker plats senare!
-    private AiResponse aiComponent;
+    private string userMessage = "";
+    private string apiToken = "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";
+    private AiResponse? aiComponent;
 
     private async Task GetAIResponse()
     {
@@ -33,6 +40,8 @@
 
             await aiComponent.GetAIResponse();
 
+            // 🟢 Rensa fältet efter att frågan skickats
+            userMessage = "";
             isLoading = false;
             StateHasChanged();
         }
@@ -47,6 +56,59 @@
         Logger.LogInformation($"AI-svar mottaget: {response}");
     }
 }
+
+
+
+
+@* @page "/ai" *@
+@* @inject ILogger<Ai> Logger *@
+@* @rendermode InteractiveServer *@
+
+
+@* <h3>AI Support</h3> *@
+
+@* <button class="btn btn-primary" @onclick="GetAIResponse" disabled="@isLoading"> *@
+@*     @if (isLoading) *@
+@*     { *@
+@*         <span>Väntar på AI...</span> *@
+@*     } *@
+@*     else *@
+@*     { *@
+@*         <span>Få AI-svar</span> *@
+@*     } *@
+@* </button> *@
+
+@* <AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" /> *@
+
+@* @code { *@
+@*     private bool isLoading = false; *@
+@*     private string userMessage = "Varför ska man ha engelska i skolan?"; *@
+@*     private string apiToken = "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"; // Flytta detta till en säker plats senare! *@
+@*     private AiResponse aiComponent; *@
+
+@*     private async Task GetAIResponse() *@
+@*     { *@
+@*         if (aiComponent is not null) *@
+@*         { *@
+@*             isLoading = true; *@
+@*             StateHasChanged(); *@
+
+@*             await aiComponent.GetAIResponse(); *@
+
+@*             isLoading = false; *@
+@*             StateHasChanged(); *@
+@*         } *@
+@*         else *@
+@*         { *@
+@*             Logger.LogError("🚨 aiComponent är null!"); *@
+@*         } *@
+@*     } *@
+
+@*     private void HandleResponse(string response) *@
+@*     { *@
+@*         Logger.LogInformation($"AI-svar mottaget: {response}"); *@
+@*     } *@
+@* } *@
 
 
 
