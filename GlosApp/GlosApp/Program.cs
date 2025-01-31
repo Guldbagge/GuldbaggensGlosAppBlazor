@@ -19,6 +19,9 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
+builder.Services.AddScoped<HttpClient>(sp =>
+    new HttpClient { BaseAddress = new Uri("https://api.openai.com/") });
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = IdentityConstants.ApplicationScheme;

@@ -1,4 +1,58 @@
 ﻿@page "/ai"
+@inject ILogger<Ai> Logger
+@rendermode InteractiveServer
+
+
+<h3>AI Support</h3>
+
+<button class="btn btn-primary" @onclick="GetAIResponse" disabled="@isLoading">
+    @if (isLoading)
+    {
+        <span>Väntar på AI...</span>
+    }
+    else
+    {
+        <span>Få AI-svar</span>
+    }
+</button>
+
+<AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
+
+@code {
+    private bool isLoading = false;
+    private string userMessage = "Varför ska man ha engelska i skolan?";
+    private string apiToken = "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"; // Flytta detta till en säker plats senare!
+    private AiResponse aiComponent;
+
+    private async Task GetAIResponse()
+    {
+        if (aiComponent is not null)
+        {
+            isLoading = true;
+            StateHasChanged();
+
+            await aiComponent.GetAIResponse();
+
+            isLoading = false;
+            StateHasChanged();
+        }
+        else
+        {
+            Logger.LogError("🚨 aiComponent är null!");
+        }
+    }
+
+    private void HandleResponse(string response)
+    {
+        Logger.LogInformation($"AI-svar mottaget: {response}");
+    }
+}
+
+
+
+
+
+@* @page "/ai"
 @using System.Text.Json
 @inject HttpClient Http
 @inject ILogger<Ai> Logger
@@ -53,7 +107,7 @@
                     Content = new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8, "application/json")
                 };
 
-            requestMessage.Headers.Add("Authorization", "Bearer sk-proj-XXXXXXX");
+            requestMessage.Headers.Add("Authorization", "Bearer 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");
 
             var response = await Http.SendAsync(requestMessage);
             Logger.LogInformation($"🟠 API Svarskod: {response.StatusCode}");
@@ -97,3 +151,4 @@
         public string Content { get; set; }
     }
 }
+ *@

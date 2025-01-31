@@ -1,0 +1,85 @@
+﻿@using System.Text.Json
+@inject HttpClient Http
+@inject ILogger<AiResponse> Logger
+
+@if (!string.IsNullOrEmpty(aiResponse))
+{
+    <div class="alert alert-info mt-3">
+        <strong>AI Svar:</strong> @aiResponse
+    </div>
+}
+
+@code {
+    [Parameter] public string UserMessage { get; set; } = string.Empty;
+    [Parameter] public string ApiToken { get; set; } = string.Empty; // Ny parameter
+    [Parameter] public EventCallback<string> OnResponseReceived { get; set; }
+
+    private string aiResponse = string.Empty;
+
+    public async Task GetAIResponse()
+    {
+        if (string.IsNullOrEmpty(ApiToken))
+        {
+            Logger.LogError("🚨 Ingen API-token angiven!");
+            aiResponse = "🚨 Ingen API-token!";
+            await OnResponseReceived.InvokeAsync(aiResponse);
+            return;
+        }
+
+        Logger.LogInformation("🟢 GetAIResponse() anropad!");
+
+        try
+        {
+            var requestData = new
+            {
+                model = "gpt-4o-mini",
+                store = true,
+                messages = new[] { new { role = "user", content = UserMessage } }
+            };
+
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "v1/chat/completions")
+                {
+                    Content = new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8, "application/json")
+                };
+
+            requestMessage.Headers.Add("Authorization", $"Bearer {ApiToken}");
+
+            var response = await Http.SendAsync(requestMessage);
+            Logger.LogInformation($"🟠 API Svarskod: {response.StatusCode}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<AIResponse>();
+                aiResponse = result?.Choices?.FirstOrDefault()?.Message?.Content ?? "Ingen respons från AI.";
+                Logger.LogInformation($"🟢 AI-svar: {aiResponse}");
+            }
+            else
+            {
+                aiResponse = $"❌ Fel vid API-anrop: {response.StatusCode}";
+                Logger.LogError(aiResponse);
+            }
+        }
+        catch (Exception ex)
+        {
+            aiResponse = $"🚨 Ett fel inträffade: {ex.Message}";
+            Logger.LogError($"🚨 Exception: {ex}");
+        }
+
+        await OnResponseReceived.InvokeAsync(aiResponse);
+    }
+
+    public class AIResponse
+    {
+        public List<Choice> Choices { get; set; }
+    }
+
+    public class Choice
+    {
+        public Message Message { get; set; }
+    }
+
+    public class Message
+    {
+        public string Content { get; set; }
+    }
+}
