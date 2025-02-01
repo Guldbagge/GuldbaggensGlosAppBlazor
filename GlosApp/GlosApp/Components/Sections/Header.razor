@@ -1,4 +1,32 @@
-﻿
+﻿<div class="header">
+    <AuthorizeView>
+        <NotAuthorized>
+            <NavLink href="/">
+                <div class="logo">
+                    <img src="/images/logo.jpg" alt="Logo" />
+                </div>
+            </NavLink>
+        </NotAuthorized>
+    </AuthorizeView>
+
+    <div class="text">
+        <h1>Pluggat?</h1>
+        <h2>Äntligen fri!</h2>
+    </div>
+
+    <AuthorizeView>
+        <Authorized>
+            <NavLink href="/AnswerReview" class="header-icon-link">
+                <div class="header-icon">
+                    <i class="fa-regular fa-user-check"></i>
+                </div>
+            </NavLink>
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+
+@* 
 <div class="header">
     <NavLink href="/">
         <div class="logo">
@@ -19,4 +47,4 @@
             </NavLink>
         </Authorized>
     </AuthorizeView>
-</div>
+</div> *@

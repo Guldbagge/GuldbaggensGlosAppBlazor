@@ -5,6 +5,10 @@
   justify-content: space-around;
   background-color: #4B0082;
   height: 100px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 10;
 }
 .header .logo img {
   height: 75px;
