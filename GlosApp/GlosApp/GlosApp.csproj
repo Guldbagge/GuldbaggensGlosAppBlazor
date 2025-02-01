@@ -37,7 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\css\scss\components\" />
     <Folder Include="wwwroot\css\scss\core\" />
   </ItemGroup>
 

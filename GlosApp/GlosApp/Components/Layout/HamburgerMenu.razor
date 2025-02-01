@@ -1,0 +1,35 @@
+﻿@rendermode InteractiveServer
+
+
+<div class="hamburger-container">
+    <button class="hamburger-icon" @onclick="ToggleMenu">
+        &#9776; <!-- Korrekt menyikon (☰) -->
+    </button>
+
+    <div class="overlay-menu @(isMenuOpen ? "open" : "")">
+        <button class="close-button" @onclick="ToggleMenu">
+            &#10006; <!-- Korrekt stäng-ikon (✖) -->
+        </button>
+
+        <nav>
+            <ul>
+                <li><NavLink href="/">Hem</NavLink></li>
+                <li><NavLink href="/sofia">Sofia</NavLink></li>
+                <li><NavLink href="/alma">Alma</NavLink></li>
+                <li><NavLink href="/quiz">Quiz</NavLink></li>
+                <li><NavLink href="/user/words">Create</NavLink></li>
+                <li><NavLink href="/my-own-words">My Own</NavLink></li>
+                <li><NavLink href="/ai">Ask AI</NavLink></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+@code {
+    private bool isMenuOpen = false;
+
+    private void ToggleMenu()
+    {
+        isMenuOpen = !isMenuOpen;
+    }
+}
