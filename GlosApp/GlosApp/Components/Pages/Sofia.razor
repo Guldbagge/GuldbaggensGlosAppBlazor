@@ -24,13 +24,14 @@
                             <AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
                         </div>
 
-                        @if (!string.IsNullOrEmpty(aiResponseMessage))
+ @*                        @if (!string.IsNullOrEmpty(aiResponseMessage))
                         {
                             <div class="alert alert-info mt-2">
                                 AI-svar: @aiResponseMessage
                             </div>
-                        }
+                        } *@
                     }
+
 
                     @if (showResult)
                     {
@@ -123,8 +124,8 @@
 
         await GetAIResponse(); // Vänta på AI-responsen innan du sätter det nya ordet
 
-        currentExplanationWord = answer; // Sätt ordet efter att AI-svaret har kommit
-        StateHasChanged(); // Uppdatera UI igen
+        // currentExplanationWord = answer; // Sätt ordet efter att AI-svaret har kommit
+        // StateHasChanged(); // Uppdatera UI igen
     }
 
 
