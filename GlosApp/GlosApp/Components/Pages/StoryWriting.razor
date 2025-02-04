@@ -21,7 +21,8 @@
     </button>
 
     <div>
-        <AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
+        <AiResponse @ref="aiComponent" UserMessage="@modifiedMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
+
     </div>
 </div>
 
@@ -68,18 +69,39 @@
     private string userMessage = "";
     private string apiToken = "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";
     private AiResponse? aiComponent;
+    private string modifiedMessage = "";
 
     private async Task GetAIResponse()
     {
         if (aiComponent is not null)
         {
             isLoading = true;
-            StateHasChanged();
+            StateHasChanged(); // Uppdatera UI innan vi gör något annat
 
+            // Spara originalmeddelandet
+            string originalMessage = userMessage;
+
+            // Skapa modifierad prompt
+            modifiedMessage = $"Du är en lärare som ger respons på en text skriven av en elev i årskurs 7. " +
+                              "Din uppgift är att: " +
+                              "1. Identifiera stavfel och grammatiska fel. " +
+                              "2. Ge allmän feedback om textens innehåll och struktur. " +
+                              "3. Svara på svenska. " +
+                              "4. Håll responsen kort – max 100 ord. " +
+                              $"Här är elevens text: {userMessage}";
+
+            // Säkerställ att modifiedMessage uppdateras i UI
+            StateHasChanged();
+            await Task.Delay(50); // Kort delay för att säkerställa uppdatering i Blazor
+
+            Logger.LogInformation($"Skickar följande prompt till AI: {modifiedMessage}");
+
+            // Skicka modifierad prompt
             await aiComponent.GetAIResponse();
 
-            // 🟢 Rensa fältet efter att texten skickats
-            userMessage = "";
+            // Återställ userMessage
+            userMessage = originalMessage;
+
             isLoading = false;
             StateHasChanged();
         }
@@ -89,35 +111,15 @@
         }
     }
 
-    // private async Task GetAIResponse()
-    // {
-    //     if (aiComponent is not null)
-    //     {
-    //         isLoading = true;
-    //         StateHasChanged();
 
-
-    //         string prompt = $"Ge respons på berättelsen som en lärare på denna berättelse, svara på svenska max 100 ord, kan vara stavfel, gramatik eller andra tips. >Ta det som är mest lämpat för denna text: {userMessage}";
-
-    //         // Skicka prompten till AI-komponenten
-    //         await aiComponent.GetAIResponse(prompt);
-
-    //         // 🟢 Rensa fältet efter att texten skickats
-    //         userMessage = "";
-    //         isLoading = false;
-    //         StateHasChanged();
-    //     }
-    //     else
-    //     {
-    //         Logger.LogError("🚨 aiComponent är null!");
-    //     }
-    // }
 
     private void HandleResponse(string response)
     {
         Logger.LogInformation($"AI-svar mottaget: {response}");
     }
 }
+
+
 
 
 
