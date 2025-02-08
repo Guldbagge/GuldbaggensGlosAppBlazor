@@ -58,7 +58,7 @@
          @*    <NavLink href="/Spanish" class="btn btn-primary">Spanska</NavLink> *@
         </div>
 
-        <div class="carousel slide mt-4 d-none d-md-block" id="horseCarousel" data-ride="carousel" data-interval="6000">
+        <div class="carousel slide mt-4 d-none d-xl-block d-xxl-none" id="horseCarousel" data-ride="carousel" data-interval="6000">
             <div class="carousel-inner">
                 @if (horseImageUrls.Any())
                 {
@@ -80,6 +80,53 @@
             </a>
         </div>
     </div>
+
+    <div class="tips-container d-flex flex-column flex-md-row flex-wrap justify-content-between mt-4 mb-4">
+        <div class="tip-box text-center p-3">
+            <i class="fas fa-book text-primary fs-2"></i>
+            <p><strong>Bättre inlärning</strong><br>Läxor hjälper dig att repetera och förstå ämnet bättre.</p>
+        </div>
+        <div class="tip-box text-center p-3">
+            <i class="fas fa-brain text-success fs-2"></i>
+            <p><strong>Utvecklar självdisciplin</strong><br>Att göra läxor tränar din förmåga att planera och ta ansvar.</p>
+        </div>
+        <div class="tip-box text-center p-3">
+            <i class="fas fa-clock text-warning fs-2"></i>
+            <p><strong>Förbättrar tidsplanering</strong><br>Att hantera uppgifter och deadlines gör dig mer organiserad.</p>
+        </div>
+        <div class="tip-box text-center p-3">
+            <i class="fas fa-globe text-info fs-2"></i>
+            <p><strong>Helt reklamrfi</strong><br>Vår tjänst är 100% reklamfri för alla användare.</p>
+        </div>
+        <div class="tip-box text-center p-3">
+            <i class="fas fa-users text-danger fs-2"></i>
+            <p><strong>Stöd från andra</strong><br>Få hjälp och diskutera uppgifter med andra elever.</p>
+        </div>
+        <div class="tip-box text-center p-3">
+            <i class="fas fa-quote-left text-secondary fs-2"></i>
+            <p><strong>Användarcitat</strong><br>"Den här sidan har verkligen hjälpt mig med skolan!"</p>
+        </div>
+    </div>
+
+    <style>
+        .tips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tip-box {
+            flex: 1 1 calc(33.333% - 1rem);
+            background: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-width: 250px;
+        }
+       
+
+        
+    </style>
+
 
 
 

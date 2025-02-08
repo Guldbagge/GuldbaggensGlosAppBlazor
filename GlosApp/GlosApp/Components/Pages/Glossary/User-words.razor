@@ -3,7 +3,7 @@
 @inject ApplicationDbContext DbContext
 @rendermode InteractiveServer
 
-<div class="container">
+<div class="container min-vh-100 d-flex flex-column">
 
     <h3>Hantera Dina Egna Glosor</h3>
 
@@ -67,6 +67,8 @@
     private WordAnswer EditingWord = new();
     private bool ShowModal = false;
     private bool IsEditMode = false;
+    private AiResponse? aiComponent;
+    [Inject] private IJSRuntime jsRuntime { get; set; } = default!;
 
     protected override void OnInitialized()
     {
@@ -148,6 +150,11 @@
     {
         ShowModal = false;
         EditingWord = new WordAnswer(); // Reset EditingWord after modal close
+    }
+
+    private void ScrollToTop()
+    {
+        jsRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
     }
 }
 

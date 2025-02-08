@@ -30,6 +30,16 @@
     private string userMessage = "";
     private string apiToken = "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";
     private AiResponse? aiComponent;
+    [Inject] private IJSRuntime jsRuntime { get; set; } = default!;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ScrollToTop();
+        }
+    }
+
 
     private async Task GetAIResponse()
     {
@@ -54,6 +64,10 @@
     private void HandleResponse(string response)
     {
         Logger.LogInformation($"AI-svar mottaget: {response}");
+    }
+    private void ScrollToTop()
+    {
+        jsRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
     }
 }
 

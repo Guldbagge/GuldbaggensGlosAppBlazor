@@ -4,7 +4,7 @@
 @using GlosApp.Models
 @inject ApplicationDbContext DbContext
 
-<div class="container">
+<div class="container min-vh-100 d-flex flex-column">
     <h3>Mina egna glossor</h3>
 
     <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
@@ -63,6 +63,8 @@
     private bool showResult = false;
     private bool missingAnswers = false;
     private bool IsLoading = true;
+    private AiResponse? aiComponent;
+    [Inject] private IJSRuntime jsRuntime { get; set; } = default!;
 
     protected override void OnInitialized()
     {
@@ -115,6 +117,11 @@
     public class UserAnswerForm
     {
         public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
+    }
+
+    private void ScrollToTop()
+    {
+        jsRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
     }
 }
 

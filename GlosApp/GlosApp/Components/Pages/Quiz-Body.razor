@@ -57,42 +57,46 @@
     private bool showResult = false;
     private bool missingAnswers = false;
 
+    [Inject]
+    private IJSRuntime jsRuntime { get; set; } = null!;
+
     protected override void OnInitialized()
     {
         userAnswerForm.Answers = new List<WordAnswer>
-{
-    new WordAnswer("Vad heter kroppens största organ? - A) Hjärnan - B) Huden - C) Hjärtat", "B"),
-    new WordAnswer("Vad skyddar huden oss mot? - A) Kalla vindar - B) Bakterier och virus - C) Insektsbett", "B"),
-    new WordAnswer("Vilket av dessa är inte ett lager i huden? - A) Överhuden - B) Fettlagret - C) Underhuden", "B"),
-    new WordAnswer("Vilken sinnesfunktion är inte en del av känselsinnet? - A) Hörsel - B) Beröring - C) Syn", "A"),
-    new WordAnswer("Vilket av dessa organ finns inuti kroppen? - A) Lungor - B) Tänder - C) Naglar", "A"),
-    new WordAnswer("Vad är ett organsystem? - A) Ett organ som har olika delar - B) En grupp organ som arbetar tillsammans - C) Ett stort organ som fungerar självständigt", "B"),
-    new WordAnswer("Vilket av dessa är ett organsystem? - A) Matsmältningssystemet - B) Hjärnan - C) Ögon", "A"),
-    new WordAnswer("Hur många organ har människokroppen ungefär? - A) 5 - B) 100 - C) 200", "C"),
-    new WordAnswer("Vilket organ kan vi inte leva utan? - A) Hjärnan - B) Magen - C) Ögat", "A"),
-    new WordAnswer("Vad kallas kroppens små byggstenar? - A) Atomer - B) Celler - C) Organ", "B"),
-    new WordAnswer("Vad behöver cellerna för att kunna föröka sig? - A) Syre och näring - B) Socker - C) Vatten", "A"),
-    new WordAnswer("Vad är cellernas bränsle? - A) Syre - B) Glukos - C) Blod", "B"),
-    new WordAnswer("Vad är blodets huvudsakliga uppgift? - A) Transportera syre och näring - B) Skydda mot bakterier - C) Hålla kroppen varm", "A"),
-    new WordAnswer("Hur många liter blod har en vuxen människa? - A) 2 liter - B) 5 liter - C) 10 liter", "B"),
-    new WordAnswer("Vad kallas de blodkärl som transporterar syrefattigt blod? - A) Artärer - B) Vener - C) Kapillärer", "B"),
-    new WordAnswer("Vilken funktion har de röda blodkropparna? - A) Bekämpa infektioner - B) Transportera syre - C) Transportera hormoner", "B"),
-    new WordAnswer("Vad gör vita blodkroppar? - A) Transporterar syre - B) Försvarar kroppen mot sjukdomar - C) Reglerar kroppstemperaturen", "B"),
-    new WordAnswer("Var produceras blodkropparna? - A) I lungorna - B) I hjärtat - C) I benmärgen", "C"),
-    new WordAnswer("Vilket är hjärtats huvudsakliga uppgift? - A) Pumpa blod - B) Andas - C) Producera blodceller", "A"),
-    new WordAnswer("Vad heter hjärtats största artär? - A) Hålvener - B) Aorta - C) Kapillärer", "B"),
-    new WordAnswer("Vad heter de små blodkärlen där gasutbytet sker? - A) Artärer - B) Vener - C) Kapillärer", "C"),
-    new WordAnswer("Vad består mest av vatten i blodet? - A) Vita blodkroppar - B) Plasma - C) Blodplättar", "B"),
-    new WordAnswer("Vilken del av blodet hjälper till att stoppa blödningar? - A) Vita blodkroppar - B) Röda blodkroppar - C) Blodplättar", "C"),
-    new WordAnswer("Vad gör hjärtklaffarna? - A) Pumpar blod - B) Hindrar blod från att rinna baklänges - C) Producerar blodceller", "B"),
-    new WordAnswer("Vilken del av hjärtat tar emot syrefattigt blod? - A) Förmak - B) Kammare - C) Aorta", "A"),
-    new WordAnswer("Hur kan man känna sin puls? - A) På foten - B) På halsen - C) På armen", "B"),
-    new WordAnswer("Vad händer med blodet i lungorna? - A) Det får syre - B) Det förlorar syre - C) Det transporteras till magen", "A"),
-    new WordAnswer("Vad händer om man inte får tillräckligt med syre i blodet? - A) Man får ont i magen - B) Man blir trött och svag - C) Man börjar hosta", "B"),
-    new WordAnswer("Vad gör skelettet i kroppen? - A) Skyddar hjärnan - B) Ger kroppen stadga och skydd - C) Producerar blodceller", "B"),
-    new WordAnswer("Vad är musklernas uppgift? - A) Transportera blod - B) Hjälpa oss att röra oss - C) Skydda organen", "B")
-};
+        {
+            new WordAnswer("Vad heter kroppens största organ? - A) Hjärnan - B) Huden - C) Hjärtat", "B"),
+            new WordAnswer("Vad skyddar huden oss mot? - A) Kalla vindar - B) Bakterier och virus - C) Insektsbett", "B"),
+            new WordAnswer("Vilket av dessa är inte ett lager i huden? - A) Överhuden - B) Fettlagret - C) Underhuden", "B"),
+            new WordAnswer("Vilken sinnesfunktion är inte en del av känselsinnet? - A) Hörsel - B) Beröring - C) Syn", "A"),
+            new WordAnswer("Vilket av dessa organ finns inuti kroppen? - A) Lungor - B) Tänder - C) Naglar", "A"),
+            new WordAnswer("Vad är ett organsystem? - A) Ett organ som har olika delar - B) En grupp organ som arbetar tillsammans - C) Ett stort organ som fungerar självständigt", "B"),
+            new WordAnswer("Vilket av dessa är ett organsystem? - A) Matsmältningssystemet - B) Hjärnan - C) Ögon", "A"),
+            new WordAnswer("Hur många organ har människokroppen ungefär? - A) 5 - B) 100 - C) 200", "C"),
+            new WordAnswer("Vilket organ kan vi inte leva utan? - A) Hjärnan - B) Magen - C) Ögat", "A"),
+            new WordAnswer("Vad kallas kroppens små byggstenar? - A) Atomer - B) Celler - C) Organ", "B"),
+            new WordAnswer("Vad behöver cellerna för att kunna föröka sig? - A) Syre och näring - B) Socker - C) Vatten", "A"),
+            new WordAnswer("Vad är cellernas bränsle? - A) Syre - B) Glukos - C) Blod", "B"),
+            new WordAnswer("Vad är blodets huvudsakliga uppgift? - A) Transportera syre och näring - B) Skydda mot bakterier - C) Hålla kroppen varm", "A"),
+            new WordAnswer("Hur många liter blod har en vuxen människa? - A) 2 liter - B) 5 liter - C) 10 liter", "B"),
+            new WordAnswer("Vad kallas de blodkärl som transporterar syrefattigt blod? - A) Artärer - B) Vener - C) Kapillärer", "B"),
+            new WordAnswer("Vilken funktion har de röda blodkropparna? - A) Bekämpa infektioner - B) Transportera syre - C) Transportera hormoner", "B"),
+            new WordAnswer("Vad gör vita blodkroppar? - A) Transporterar syre - B) Försvarar kroppen mot sjukdomar - C) Reglerar kroppstemperaturen", "B"),
+            new WordAnswer("Var produceras blodkropparna? - A) I lungorna - B) I hjärtat - C) I benmärgen", "C"),
+            new WordAnswer("Vilket är hjärtats huvudsakliga uppgift? - A) Pumpa blod - B) Andas - C) Producera blodceller", "A"),
+            new WordAnswer("Vad heter hjärtats största artär? - A) Hålvener - B) Aorta - C) Kapillärer", "B"),
+            new WordAnswer("Vad heter de små blodkärlen där gasutbytet sker? - A) Artärer - B) Vener - C) Kapillärer", "C"),
+            new WordAnswer("Vad består mest av vatten i blodet? - A) Vita blodkroppar - B) Plasma - C) Blodplättar", "B"),
+            new WordAnswer("Vilken del av blodet hjälper till att stoppa blödningar? - A) Vita blodkroppar - B) Röda blodkroppar - C) Blodplättar", "C"),
+            new WordAnswer("Vad gör hjärtklaffarna? - A) Pumpar blod - B) Hindrar blod från att rinna baklänges - C) Producerar blodceller", "B"),
+            new WordAnswer("Vilken del av hjärtat tar emot syrefattigt blod? - A) Förmak - B) Kammare - C) Aorta", "A"),
+            new WordAnswer("Hur kan man känna sin puls? - A) På foten - B) På halsen - C) På armen", "B"),
+            new WordAnswer("Vad händer med blodet i lungorna? - A) Det får syre - B) Det förlorar syre - C) Det transporteras till magen", "A"),
+            new WordAnswer("Vad händer om man inte får tillräckligt med syre i blodet? - A) Man får ont i magen - B) Man blir trött och svag - C) Man börjar hosta", "B"),
+            new WordAnswer("Vad gör skelettet i kroppen? - A) Skyddar hjärnan - B) Ger kroppen stadga och skydd - C) Producerar blodceller", "B"),
+            new WordAnswer("Vad är musklernas uppgift? - A) Transportera blod - B) Hjälpa oss att röra oss - C) Skydda organen", "B")
+        };
 
+        ScrollToTop();
     }
 
     private void CheckAnswers()
@@ -111,13 +115,13 @@
         foreach (var answer in userAnswerForm.Answers)
         {
             DbContext.WordAnswers.Add(new WordAnswer
-                {
-                    Swedish = answer.Swedish,
-                    English = answer.English,
-                    UserAnswer = answer.UserAnswer,
-                    Timestamp = answer.Timestamp,
-                    Language = "Quiz"
-                });
+            {
+                Swedish = answer.Swedish,
+                English = answer.English,
+                UserAnswer = answer.UserAnswer,
+                Timestamp = answer.Timestamp,
+                Language = "Quiz"
+            });
         }
 
         DbContext.SaveChanges();
@@ -134,6 +138,11 @@
         correctAnswers = 0;
         showResult = false;
         missingAnswers = false;
+    }
+
+    private void ScrollToTop()
+    {
+        jsRuntime.InvokeVoidAsync("scrollTo", 0, 0);
     }
 
     public class UserAnswerForm

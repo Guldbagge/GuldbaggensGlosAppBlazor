@@ -6,6 +6,7 @@
   gap: 2rem;
   background-color: #4B0082;
   height: 70px;
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   width: 100%;
@@ -106,7 +107,6 @@ main .wrapper {
   justify-content: start;
   align-items: center;
   flex-direction: column;
-  height: 90vh;
   padding: 1rem;
 }
 @media (min-width: 1200px) {
@@ -417,12 +417,13 @@ button:disabled {
   cursor: pointer;
 }
 
-.btn-primary {
-  background-color: #194C67;
-  border: #194C67;
+/*.btn-primary {
+    background-color: (#194C67);
+    border: #194C67;
+    border-radius: 0.5rem;
+
+    @media (min-width: 1200px) {
+        width: 6rem;
+    }
 }
-@media (min-width: 1200px) {
-  .btn-primary {
-    width: 6rem;
-  }
-}
+*/
