@@ -1,0 +1,127 @@
+﻿@page "/glossary/korean"
+@rendermode InteractiveWebAssembly
+@using System.Linq
+
+<HamburgerMenu />
+<div class="container">
+    <h3>Glosformulär - Koreanska</h3>
+
+    <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
+        @foreach (var answer in userAnswerForm.Answers)
+        {
+            <div class="form-group">
+                <label>@answer.Swedish</label>
+                <InputText @bind-Value="answer.UserAnswer" class="form-control" autocomplete="off" />
+                @if (showResult)
+                {
+                    if (string.IsNullOrWhiteSpace(answer.UserAnswer))
+                    {
+                        <span class="text-warning">⚠️ Detta fält är tomt.</span>
+                    }
+                    else if (NormalizeAnswer(answer.UserAnswer).Equals(NormalizeAnswer(answer.KoreanRomanized), StringComparison.OrdinalIgnoreCase))
+                    {
+                        <span class="text-success">✔️ Rätt!</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">❌ Fel, rätt svar är "@answer.KoreanRomanized".</span>
+                    }
+                }
+            </div>
+        }
+
+        @if (showResult)
+        {
+            <div class="alert alert-info">
+                Du fick @correctAnswers av @userAnswerForm.Answers.Count ord rätt!
+            </div>
+        }
+
+        @if (missingAnswers)
+        {
+            <div class="alert alert-warning">
+                Du måste fylla i alla fält innan du kan kontrollera dina svar.
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Kontrollera svar</button>
+        <button type="button" class="btn btn-success" @onclick="ResetForm">Rensa glosformuläret</button>
+    </EditForm>
+</div>
+
+@code {
+    private UserAnswerForm userAnswerForm = new UserAnswerForm();
+    private int correctAnswers = 0;
+    private bool showResult = false;
+    private bool missingAnswers = false;
+
+    protected override void OnInitialized()
+    {
+        userAnswerForm.Answers = new List<WordAnswer>
+        {
+            new WordAnswer("Hej", "안녕하세요", "annyeonghaseyo"),
+            new WordAnswer("Tack", "감사합니다", "gamsahamnida"),
+            new WordAnswer("Ja", "네", "ne"),
+            new WordAnswer("Nej", "아니요", "aniyo"),
+            new WordAnswer("Vatten", "물", "mul"),
+            new WordAnswer("Mat", "음식", "eumsik"),
+            new WordAnswer("Kärlek", "사랑", "sarang"),
+            new WordAnswer("Vän", "친구", "chingu"),
+            new WordAnswer("Familj", "가족", "gajok"),
+            new WordAnswer("Skola", "학교", "hakgyo")
+        };
+    }
+
+    private void CheckAnswers()
+    {
+        missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
+
+        if (missingAnswers)
+        {
+            showResult = false;
+            return;
+        }
+
+        correctAnswers = userAnswerForm.Answers.Count(answer =>
+            NormalizeAnswer(answer.UserAnswer).Equals(NormalizeAnswer(answer.KoreanRomanized), StringComparison.OrdinalIgnoreCase));
+
+        showResult = true;
+    }
+
+    private string NormalizeAnswer(string answer)
+    {
+        return string.Join(" ", answer?.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>());
+    }
+
+    private void ResetForm()
+    {
+        foreach (var answer in userAnswerForm.Answers)
+        {
+            answer.UserAnswer = string.Empty;
+        }
+
+        correctAnswers = 0;
+        showResult = false;
+        missingAnswers = false;
+    }
+
+    public class UserAnswerForm
+    {
+        public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
+    }
+
+    public class WordAnswer
+    {
+        public string Swedish { get; set; }
+        public string Korean { get; set; }
+        public string KoreanRomanized { get; set; }
+        public string UserAnswer { get; set; } = string.Empty;
+
+        public WordAnswer(string swedish, string korean, string koreanRomanized)
+        {
+            Swedish = swedish;
+            Korean = korean;
+            KoreanRomanized = koreanRomanized;
+        }
+    }
+}
