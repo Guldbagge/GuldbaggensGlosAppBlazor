@@ -1,6 +1,7 @@
 ﻿@page "/ai"
 @inject ILogger<Ai> Logger
 @rendermode InteractiveServer
+@inject IConfiguration Configuration
 
 <h2 class="text-center my-4">🤖 AI Support</h2>
 
@@ -28,12 +29,19 @@
 @code {
     private bool isLoading = false;
     private string userMessage = "";
-    private string apiToken = "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";
+    private string apiToken = "";
     private AiResponse? aiComponent;
     [Inject] private IJSRuntime jsRuntime { get; set; } = default!;
 
+    private string GetApiToken()
+    {
+        return Configuration["ApiKeys:ServiceA"] ?? "API-nyckel saknas";
+    }
+
     protected override void OnAfterRender(bool firstRender)
     {
+        apiToken = GetApiToken(); //la jag den här fungerade det
+
         if (firstRender)
         {
             ScrollToTop();
@@ -41,8 +49,10 @@
     }
 
 
+
     private async Task GetAIResponse()
     {
+
         if (aiComponent is not null)
         {
             isLoading = true;

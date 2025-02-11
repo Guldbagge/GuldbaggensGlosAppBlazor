@@ -9,25 +9,8 @@
 
 
 <main>
-    <AuthorizeView>
-        <Authorized>
-           
-        </Authorized>
-        <NotAuthorized>
-            <div class="wave-bg">
-                <div class="container">
-                    <h5>Log in if you are a teacher.</h5>
-
-                    <NavLink class="btn btn-primary" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
-                </div>
-            </div>
-        </NotAuthorized>
-    </AuthorizeView>
-
     <div class="wrapper">
-        <div class="carousel slide mt-4" id="danceCarousel" data-ride="carousel" data-interval="2000">
+        <div class="carousel slide mt-4" id="danceCarousel" data-ride="carousel" data-interval="3000">
             <div class="carousel-inner">
                 @if (danceImageUrls.Any())
                 {
@@ -58,7 +41,7 @@
          @*    <NavLink href="/Spanish" class="btn btn-primary">Spanska</NavLink> *@
         </div>
 
-        <div class="carousel slide mt-4 d-none d-xl-block d-xxl-none" id="horseCarousel" data-ride="carousel" data-interval="6000">
+        <div class="carousel slide mt-4 d-none d-xl-block d-xxl-none" id="horseCarousel" data-ride="carousel" data-interval="3000">
             <div class="carousel-inner">
                 @if (horseImageUrls.Any())
                 {
@@ -107,6 +90,23 @@
             <p><strong>Användarcitat</strong><br>"Den här sidan har verkligen hjälpt mig med skolan!"</p>
         </div>
     </div>
+
+    <AuthorizeView>
+        <Authorized>
+
+        </Authorized>
+        <NotAuthorized>
+            <div class="wave-bg">
+                <div class="container">
+                    <h5>Log in if you are a teacher.</h5>
+
+                    <NavLink class="btn btn-primary" href="Account/Login">
+                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
 
     <style>
         .tips-container {
