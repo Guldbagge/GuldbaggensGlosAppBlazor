@@ -141,7 +141,7 @@
         try
         {
             
-            var horseResponse = await Http.GetStringAsync("https://api.unsplash.com/photos/random?query=horse&count=3&client_id=KskWzvW414fiXTLDuI8evhu2N5DdnATSMHR_6tEGY3k");
+            var horseResponse = await Http.GetStringAsync("https://api.unsplash.com/photos/random?query=sport&count=3&client_id=KskWzvW414fiXTLDuI8evhu2N5DdnATSMHR_6tEGY3k");
             var horsePhotoData = JsonSerializer.Deserialize<List<Photo>>(horseResponse);
 
             
