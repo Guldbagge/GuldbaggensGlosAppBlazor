@@ -128,11 +128,7 @@ main .wrapper .btn .btn-primary {
   border: #194C67;
   margin: 1rem;
   width: fit-content;
-}
-@media (min-width: 1200px) {
-  main .wrapper .btn .btn-primary {
-    width: 6rem;
-  }
+  width: 6rem;
 }
 main .wrapper .carousel {
   object-fit: cover;
@@ -417,13 +413,9 @@ button:disabled {
   cursor: pointer;
 }
 
-/*.btn-primary {
-    background-color: (#194C67);
-    border: #194C67;
-    border-radius: 0.5rem;
-
-    @media (min-width: 1200px) {
-        width: 6rem;
-    }
+.btn-primary {
+  background-color: #194C67;
+  border: #194C67;
+  border-radius: 0.5rem;
+  width: 6rem;
 }
-*/

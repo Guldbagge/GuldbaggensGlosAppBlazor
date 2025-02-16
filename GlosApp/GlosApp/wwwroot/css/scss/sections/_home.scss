@@ -7,7 +7,6 @@
         justify-content: start;
         align-items: center;
         flex-direction: column;
-      
         padding: 1rem;
 
         @media (min-width: 1200px) {
@@ -28,9 +27,9 @@
                 border: #194C67;
                 margin: 1rem;
                 width: fit-content;
+                width: 6rem;
 
                 @media (min-width: 1200px) {
-                    width: 6rem;
                 }
             }
         }

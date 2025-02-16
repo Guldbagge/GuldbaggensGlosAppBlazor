@@ -3,13 +3,13 @@
 @rendermode InteractiveServer
 @inject IConfiguration Configuration
 
-<h2 class="text-center my-4">🤖 AI Support</h2>
+<h2 class="text-center mt-4">🤖 AI Support</h2>
 
 <div class="robot-avatar text-center">
     <img src="https://cdn-icons-png.flaticon.com/512/4712/4712105.png" alt="AI Bot" class="img-fluid" style="max-width: 120px;" />
 </div>
 
-<div class="chat-container container mt-4 p-4 border rounded shadow-sm bg-light">
+<div class="chat-container container p-4 border rounded shadow-sm bg-light">
     <div class="robot-container text-center mb-3">
         <p class="robot-text">Hej! Ställ en fråga så ska jag försöka hjälpa dig. 😊</p>
     </div>
@@ -21,7 +21,7 @@
     <div class="input-group mt-3">
         <input type="text" class="form-control" @bind="userMessage" placeholder="Skriv din fråga här..." />
         <button class="btn btn-primary ms-2 px-4" @onclick="GetAIResponse" disabled="@isLoading">
-            @(isLoading ? "Väntar..." : "Skicka fråga")
+            @(isLoading ? "Väntar..." : "Fråga")
         </button>
     </div>
 </div>
@@ -32,7 +32,7 @@
     <p>För att få så bra svar som möjligt från AI:n kan du tänka på följande när du skriver din fråga:</p>
     <ul>
         <li><strong>Var tydlig och specifik:</strong> Istället för "Berätta om AI" skriv "Hur fungerar maskininlärning inom AI?"</li>
-        <li><strong>Ge ett lagom svårt svar:</strong> Om du frågar om ett ämne kan du testa att skriva vilken nivå du vill få det förklarat, exempelvis en årskurs 7:a</li>
+        <li><strong>Ge ett lagom svårt svar:</strong> Ange vilken nivå du vill ha förklaringen på, till exempel "Förklara detta på en nivå som en sjundeklassare skulle förstå"</li>
         <li><strong>Använd steg-för-steg frågor:</strong> Om svaret är för brett, bryt ner frågan i mindre delar.</li>
     </ul>
     <p class="text-center fw-bold">Testa att experimentera med dina frågor för att få mer användbara svar! 🚀</p>
