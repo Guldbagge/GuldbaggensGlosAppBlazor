@@ -1,8 +1,14 @@
-﻿@page "/ai-quiz"
+﻿<div class="beta-banner">
+    🚀 Denna version är en **beta**! Funktionalitet och innehåll kan ändras. Tack för att du testar! 😊
+</div>
+
+
+@page "/ai-quiz"
 @using GlosApp.Models
 @inject ILogger<Ai> Logger
 @rendermode InteractiveServer
 @inject IConfiguration Configuration
+
 
 <h2 class="text-center my-4">🤖 AI Quiz Generator</h2>
 
@@ -15,7 +21,7 @@
         <p class="robot-text">Hej! Välj ett ämne för att skapa ett quiz med 10 frågor. 😊</p>
     </div>
 
-    <div class="chat-box">
+    <div class="chat-box d-none">
         <AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
     </div>
 
