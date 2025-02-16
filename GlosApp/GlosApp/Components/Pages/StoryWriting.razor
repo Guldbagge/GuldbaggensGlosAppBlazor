@@ -4,42 +4,46 @@
 @rendermode InteractiveServer
 @inject IConfiguration Configuration
 
-<h2 class="text-center my-4">✍️ AI Story Assistant</h2>
+<div class="wrapper d-flex flex-column min-vh-100">
 
-@* <div class="robot-avatar"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Person Writing" /></div> *@
-<div class="chat-container">
-    <!-- Robot Avatar -->
-    <div class="robot-container">
-        <p class="robot-text">Hej! Skriv en berättelse så hjälper jag dig att utveckla den. 😊</p>
-    </div>
+    <h2 class="text-center my-4">✍️ AI Story Assistant</h2>
 
-    <div class="input-group mt-3">
-        <textarea class="form-control larger-textarea expanding-textarea" @bind="userMessage" placeholder="Skriv din berättelse här..."></textarea>
-    </div>
+    @* <div class="robot-avatar"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Person Writing" /></div> *@
+    <div class="chat-container">
+        <!-- Robot Avatar -->
+        <div class="robot-container">
+            <p class="robot-text">Hej! Skriv en berättelse så hjälper jag dig att utveckla den. 😊</p>
+        </div>
+
+        <div class="input-group mt-3">
+            <textarea class="form-control larger-textarea expanding-textarea" @bind="userMessage" placeholder="Skriv din berättelse här..."></textarea>
+        </div>
    
-    <button class="btn btn-primary me-2 mt-2 px-4" @onclick="GetAIResponse" disabled="@isLoading">
-        @(isLoading ? "Väntar..." : "Få respons")
-    </button>
+        <button class="btn btn-primary me-2 mt-2 px-4" @onclick="GetAIResponse" disabled="@isLoading">
+            @(isLoading ? "Väntar..." : "Få respons")
+        </button>
 
-    <div>
-        <AiResponse @ref="aiComponent" UserMessage="@modifiedMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
+        <div>
+            <AiResponse @ref="aiComponent" UserMessage="@modifiedMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
 
+        </div>
     </div>
-</div>
 
-<div class="tips-container d-flex flex-column flex-md-row justify-content-between mt-4">
-    <div class="tip-box text-center p-3">
-        <i class="fas fa-lightbulb text-warning fs-2"></i>
-        <p><strong>Använd beskrivningar</strong><br>Försök att måla upp en bild med dina ord.</p>
+    <div class="tips-container d-flex flex-column flex-md-row justify-content-between mt-4">
+        <div class="tip-box text-center p-3">
+            <i class="fas fa-lightbulb text-warning fs-2"></i>
+            <p><strong>Använd beskrivningar</strong><br>Försök att måla upp en bild med dina ord.</p>
+        </div>
+        <div class="tip-box text-center p-3">
+            <i class="fas fa-pencil-alt text-primary fs-2"></i>
+            <p><strong>Variera meningarna</strong><br>Blanda korta och långa meningar för bättre flyt.</p>
+        </div>
+        <div class="tip-box text-center p-3">
+            <i class="fas fa-comment-dots text-success fs-2"></i>
+            <p><strong>Lägg till dialog</strong><br>Få karaktärerna att tala för att göra texten mer levande.</p>
+        </div>
     </div>
-    <div class="tip-box text-center p-3">
-        <i class="fas fa-pencil-alt text-primary fs-2"></i>
-        <p><strong>Variera meningarna</strong><br>Blanda korta och långa meningar för bättre flyt.</p>
-    </div>
-    <div class="tip-box text-center p-3">
-        <i class="fas fa-comment-dots text-success fs-2"></i>
-        <p><strong>Lägg till dialog</strong><br>Få karaktärerna att tala för att göra texten mer levande.</p>
-    </div>
+
 </div>
 
 
@@ -137,87 +141,3 @@
 
 
 
-
-@* @rendermode InteractiveServer
-
-@using System.Linq
-@using GlosApp.Models
-@inject ApplicationDbContext DbContext
-
-<div class="container">
-    <h3>Skriv en berättelse</h3>
-
-    <EditForm Model="storyForm" OnValidSubmit="AnalyzeText">
-        <div class="form-group">
-            <label for="storyInput">Skriv din berättelse här:</label>
-            <textarea id="storyInput" class="form-control" @bind="storyForm.UserStory" rows="10"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-2">Analysera text</button>
-    </EditForm>
-
-    <AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
-
-    @if (!string.IsNullOrWhiteSpace(AiFeedback))
-    {
-        <div class="alert alert-success mt-3">
-            <strong>Feedback:</strong>
-            <p>@AiFeedback</p>
-        </div>
-    }
-</div>
-
-@code {
-    private StoryFormModel storyForm = new StoryFormModel();
-    private string AiFeedback = string.Empty;
-    private AiResponse? aiComponent;
-    private string userMessage = "";
-    private string apiToken = "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"; // Lägg till din riktiga API-nyckel
-
-    private async Task AnalyzeText()
-    {
-        Console.WriteLine($"User story: {storyForm.UserStory}");  // Kontrollera att textfältet har värde
-        Console.WriteLine($"User message: {userMessage}");
-
-        if (string.IsNullOrWhiteSpace(storyForm.UserStory))
-        {
-            AiFeedback = "Skriv något i textfältet för att få feedback!";
-            Console.WriteLine("Feedback: " + AiFeedback);
-            StateHasChanged();
-            return;
-        }
-
-        userMessage = $"Ge feedback på följande berättelse, anpassad för en elev i årskurs 7 svaret ska max vara 100 tecken.:\n\n{storyForm.UserStory}";
-
-        await GetAIResponse();
-        Console.WriteLine("Feedback efter respons: " + AiFeedback);
-    }
-
-
-
-    private async Task GetAIResponse()
-    {
-        if (aiComponent is null)
-        {
-            AiFeedback = "AI-komponenten är inte laddad än!";
-            StateHasChanged();
-            return;
-        }
-
-        await aiComponent.GetAIResponse();
-        StateHasChanged();
-    }
-
-
-    private void HandleResponse(string response)
-    {
-        AiFeedback = response;
-        StateHasChanged(); // Uppdatera UI för att visa feedback från AI
-    }
-
-    public class StoryFormModel
-    {
-        public string UserStory { get; set; } = string.Empty;
-    }
-}
- *@

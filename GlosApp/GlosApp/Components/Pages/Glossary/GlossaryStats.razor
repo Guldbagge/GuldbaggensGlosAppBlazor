@@ -7,7 +7,7 @@
     <div class="container text-center">
         <h2>Statistik över gjorda glosor</h2>
 
-        <canvas id="myChart" width="400" height="200"></canvas>
+        <canvas id="myChart"></canvas>
 
         <div class="pa-4">
             <h4>Statistik</h4>
@@ -63,60 +63,3 @@
 }
 
 
-
-
-
-@* @page "/glossary-stats"
-@using GlosApp.Models
-@inject ApplicationDbContext DbContext
-@using MudBlazor
-
-<HeadContent>
-    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-</HeadContent>
-
-<main class="wrapper d-flex flex-column min-vh-100">
-    <div class="container text-center">
-        <h2>Statistik över gjorda glosor</h2>
-
-        <MudRow>
-            <MudCol xs="12" md="6">
-                <MudChart ChartType="ChartType.Pie"
-                          InputData="@chartData.ToArray()"
-                          Labels="@chartLabels.ToArray()" />
-            </MudCol>
-            <MudCol xs="12" md="6">
-                <MudPaper Elevation="4" Class="pa-4">
-                    <h4>Statistik</h4>
-                    <p>Totalt antal svar: <strong>@totalAnswers</strong></p>
-                    <p>Rätt svar: <strong>@correctAnswers</strong></p>
-                    <p>Fel svar: <strong>@wrongAnswers</strong></p>
-                    <p>Rätt i %: <strong>@correctPercentage%</strong></p>
-                </MudPaper>
-            </MudCol>
-        </MudRow>
-    </div>
-</main>
-
-@code {
-    private int totalAnswers;
-    private int correctAnswers;
-    private int wrongAnswers;
-    private double correctPercentage;
-    private double[] chartData = new double[2] { 0, 0 };
-    private string[] chartLabels = new string[] { "Rätt", "Fel" };
-
-    protected override void OnInitialized()
-    {
-        var wordAnswers = DbContext.WordAnswers.ToList();
-
-        totalAnswers = wordAnswers.Count;
-        correctAnswers = wordAnswers.Count(wa => wa.UserAnswer?.Trim().Equals(wa.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
-        wrongAnswers = totalAnswers - correctAnswers;
-        correctPercentage = totalAnswers > 0 ? (correctAnswers * 100.0 / totalAnswers) : 0;
-
-        chartData = new double[] { correctAnswers, wrongAnswers };
-    }
-}
- *@

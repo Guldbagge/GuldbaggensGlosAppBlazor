@@ -1,0 +1,108 @@
+﻿@page "/ai-quiz"
+@inject ILogger<Ai> Logger
+@rendermode InteractiveServer
+@inject IConfiguration Configuration
+
+<h2 class="text-center my-4">🤖 AI Quiz Generator</h2>
+
+<div class="robot-avatar">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712105.png" alt="AI Bot" />
+</div>
+
+<div class="chat-container">
+    <div class="robot-container">
+        <p class="robot-text">Hej! Välj ett ämne för att skapa ett quiz med 10 frågor. 😊</p>
+    </div>
+
+@*     <div class="chat-box">
+        <AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
+    </div> *@
+
+    <div class="input-group mt-3">
+        <input type="text" class="form-control" @bind="userMessage" placeholder="Ex. Historia, Geografi, Matematik..." />
+        <button class="btn btn-primary ms-2 px-4" @onclick="GetAIQuiz" disabled="@isLoading">
+            @(isLoading ? "Väntar..." : "Skapa Quiz")
+        </button>
+    </div>
+
+    @if (quizQuestions != null && quizQuestions.Any())
+    {
+        <div class="quiz-container mt-4">
+            @foreach (var question in quizQuestions)
+            {
+                <div class="quiz-question">
+                    <p><strong>Fråga:</strong> @question</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private bool isLoading = false;
+    private string userMessage = "";
+    private string apiToken = "";
+    private AiResponse? aiComponent;
+    private List<string> quizQuestions = new List<string>();
+    [Inject] private IJSRuntime jsRuntime { get; set; } = default!;
+
+    private string GetApiToken()
+    {
+        return Configuration["ApiKeys:ServiceA"] ?? "API-nyckel saknas";
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        apiToken = GetApiToken(); // Lägg till API-nyckeln här
+
+        if (firstRender)
+        {
+            ScrollToTop();
+        }
+    }
+
+    private async Task GetAIQuiz()
+    {
+        if (aiComponent is not null)
+        {
+            isLoading = true;
+            StateHasChanged();
+
+            // Skapa prompten för att be om 10 quizfrågor
+            string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}";
+
+            // Sätt prompten i UserMessage för AiResponse-komponenten
+            aiComponent.UserMessage = prompt;
+            aiComponent.ApiToken = apiToken;
+
+            // Anropa GetAIResponse utan argument (den kommer använda UserMessage)
+            await aiComponent.GetAIResponse();
+
+            // Töm inputfältet efter att frågan skickats
+            userMessage = "";
+            isLoading = false;
+            StateHasChanged();
+        }
+        else
+        {
+            Logger.LogError("🚨 aiComponent är null!");
+        }
+    }
+
+    private void HandleResponse(string response)
+    {
+        Logger.LogInformation($"AI-svar mottaget: {response}");
+
+        // Dela upp AI-svaret i frågor och visa dem
+        quizQuestions = response.Split('\n')
+                                 .Where(q => !string.IsNullOrWhiteSpace(q))
+                                 .ToList();
+
+        StateHasChanged();
+    }
+
+    private void ScrollToTop()
+    {
+        jsRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
+    }
+}
