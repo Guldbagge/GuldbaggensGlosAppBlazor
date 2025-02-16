@@ -1,4 +1,5 @@
 ﻿@page "/ai-quiz"
+@using GlosApp.Models
 @inject ILogger<Ai> Logger
 @rendermode InteractiveServer
 @inject IConfiguration Configuration
@@ -14,28 +15,55 @@
         <p class="robot-text">Hej! Välj ett ämne för att skapa ett quiz med 10 frågor. 😊</p>
     </div>
 
-@*     <div class="chat-box">
+    <div class="chat-box">
         <AiResponse @ref="aiComponent" UserMessage="@userMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
-    </div> *@
+    </div>
 
     <div class="input-group mt-3">
         <input type="text" class="form-control" @bind="userMessage" placeholder="Ex. Historia, Geografi, Matematik..." />
         <button class="btn btn-primary ms-2 px-4" @onclick="GetAIQuiz" disabled="@isLoading">
-            @(isLoading ? "Väntar..." : "Skapa Quiz")
+            @(isLoading ? "Väntar..." : "Skapa")
         </button>
     </div>
 
-    @if (quizQuestions != null && quizQuestions.Any())
+    @if (quizQuestions.Any())
     {
         <div class="quiz-container mt-4">
             @foreach (var question in quizQuestions)
             {
-                <div class="quiz-question">
-                    <p><strong>Fråga:</strong> @question</p>
+                <div class="quiz-question mb-3 p-3 border rounded">
+                    <p><strong>@question.QuestionText</strong></p>
+                    <div class="d-flex flex-column">
+                        @foreach (var option in question.Options)
+                        {
+                            <button class="btn @(question.SelectedAnswer == option ? (option == question.CorrectAnswer ? "btn-success" : "btn-danger") : "btn-outline-primary") my-1"
+                                    @onclick="() => CheckAnswer(question, option)"
+                                    disabled="@quizCompleted">
+                                @option
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (quizQuestions.All(q => q.SelectedAnswer != null) && !quizCompleted)
+            {
+                <div class="text-center mt-3">
+                    <button class="btn btn-success" @onclick="ConfirmQuizCompletion">Visa resultat</button>
+                </div>
+            }
+
+
+            @if (quizCompleted)
+            {
+                <div class="text-center mt-3">
+                    <h4>Du fick @GetCorrectAnswersCount() av @quizQuestions.Count rätt! 🎉</h4>
+                    <button class="btn btn-primary mt-3" @onclick="RestartQuiz">🔄 Generera nytt quiz om @lastTopic</button>
                 </div>
             }
         </div>
     }
+
 </div>
 
 @code {
@@ -43,7 +71,9 @@
     private string userMessage = "";
     private string apiToken = "";
     private AiResponse? aiComponent;
-    private List<string> quizQuestions = new List<string>();
+    
+    private List<QuizQuestionModel> quizQuestions = new List<QuizQuestionModel>();
+
     [Inject] private IJSRuntime jsRuntime { get; set; } = default!;
 
     private string GetApiToken()
@@ -68,17 +98,11 @@
             isLoading = true;
             StateHasChanged();
 
-            // Skapa prompten för att be om 10 quizfrågor
-            string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}";
-
-            // Sätt prompten i UserMessage för AiResponse-komponenten
+            string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. Format: Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar";
             aiComponent.UserMessage = prompt;
             aiComponent.ApiToken = apiToken;
-
-            // Anropa GetAIResponse utan argument (den kommer använda UserMessage)
             await aiComponent.GetAIResponse();
 
-            // Töm inputfältet efter att frågan skickats
             userMessage = "";
             isLoading = false;
             StateHasChanged();
@@ -93,16 +117,104 @@
     {
         Logger.LogInformation($"AI-svar mottaget: {response}");
 
-        // Dela upp AI-svaret i frågor och visa dem
         quizQuestions = response.Split('\n')
-                                 .Where(q => !string.IsNullOrWhiteSpace(q))
-                                 .ToList();
+                                .Where(q => !string.IsNullOrWhiteSpace(q))
+                                .Select(ParseQuizQuestion)
+                                .Where(q => q != null)
+                                .Cast<QuizQuestionModel>()
+                                .ToList();
 
         StateHasChanged();
     }
+
+    private QuizQuestionModel? ParseQuizQuestion(string line)
+    {
+        var parts = line.Split('|');
+        if (parts.Length != 3) return null;
+
+        var questionText = parts[0].Trim();
+        var options = parts[1].Split(',').Select(o => o.Trim()).ToList();
+        var correctAnswer = parts[2].Trim();
+
+        return new QuizQuestionModel
+        {
+            QuestionText = questionText,
+            Options = options,
+            CorrectAnswer = correctAnswer
+        };
+    }
+
+    // Uppdaterad CheckAnswer-metod
+    private void CheckAnswer(QuizQuestionModel question, string selectedOption)
+    {
+        question.SelectedAnswer = selectedOption;
+        StateHasChanged();
+    }
+
+
+
 
     private void ScrollToTop()
     {
         jsRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
     }
+
+    private bool quizCompleted = false;
+    private string lastTopic = "";
+
+    // Metod för att räkna antal rätt svar
+    private int GetCorrectAnswersCount()
+    {
+        return quizQuestions.Count(q => q.SelectedAnswer == q.CorrectAnswer);
+    }
+    private void ConfirmQuizCompletion()
+    {
+        quizCompleted = true;
+        StateHasChanged();
+    }
+
+
+
+    // Metod för att starta om quizet
+    private async Task RestartQuiz()
+    {
+        quizCompleted = false;
+        await GetAIQuiz(lastTopic);
+    }
+
+    // Uppdaterad GetAIQuiz-metod
+    private async Task GetAIQuiz(string topic = "")
+    {
+        if (!string.IsNullOrWhiteSpace(userMessage))
+        {
+            lastTopic = userMessage; // Spara ämnet
+        }
+
+        if (!string.IsNullOrWhiteSpace(topic))
+        {
+            userMessage = topic; // Använd senaste ämnet om det finns
+        }
+
+        if (aiComponent is not null)
+        {
+            isLoading = true;
+            StateHasChanged();
+
+            string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. Format: Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar";
+            aiComponent.UserMessage = prompt;
+            aiComponent.ApiToken = apiToken;
+            await aiComponent.GetAIResponse();
+
+            userMessage = "";
+            isLoading = false;
+            quizCompleted = false; // Återställ quizCompleted när nytt quiz genereras
+            StateHasChanged();
+        }
+        else
+        {
+            Logger.LogError("🚨 aiComponent är null!");
+        }
+    }
+
 }
+
