@@ -56,6 +56,7 @@
                         {
                             <p class="mt-2 correct-answer show">✅ Rätt svar: @question.CorrectAnswer</p>
                         }
+
                     </div>
                 </div>
             }
@@ -159,19 +160,23 @@
         };
     }
 
-    // Uppdaterad CheckAnswer-metod
     private async Task CheckAnswer(QuizQuestionModel question, string selectedOption)
     {
+        if (question.SelectedAnswer != null) return; // Förhindra att man ändrar svar
+
         question.SelectedAnswer = selectedOption;
+
+        // Visa rätt svar endast om användaren svarade fel
+        question.ShowCorrectAnswer = selectedOption != question.CorrectAnswer;
+
+        StateHasChanged();
 
         // Vänta lite för att ge en visuell effekt
         await Task.Delay(500);
 
-        // Lägg till en klass för att highlighta rätt svar
-        question.ShowCorrectAnswer = true;
-
         StateHasChanged();
     }
+
 
 
 
