@@ -2,11 +2,11 @@
 
 public class QuizQuestionModel
 {
-    public string QuestionText { get; set; } = string.Empty;
+    public string QuestionText { get; set; } = "";
     public List<string> Options { get; set; } = new();
-    public string CorrectAnswer { get; set; } = string.Empty;
-
-    public string SelectedAnswer { get; set; } = string.Empty;
+    public string CorrectAnswer { get; set; } = "";
+    public string? SelectedAnswer { get; set; }
+    public bool ShowCorrectAnswer { get; set; } = false; 
 }
 
 

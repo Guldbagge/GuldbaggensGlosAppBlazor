@@ -42,35 +42,44 @@
                     <div class="d-flex flex-column">
                         @foreach (var option in question.Options)
                         {
-                            <button class="btn @(question.SelectedAnswer == option ? (option == question.CorrectAnswer ? "btn-success" : "btn-danger") : "btn-outline-primary") my-1"
+                            <button class="btn @(question.SelectedAnswer == option
+                                             ? (option == question.CorrectAnswer ? "btn-success" : "btn-danger wrong-answer")
+                                             : "btn-outline-primary")"
+                                    style="margin-bottom: 5px;"
                                     @onclick="() => CheckAnswer(question, option)"
                                     disabled="@quizCompleted">
                                 @option
                             </button>
                         }
+
+                        @if (question.ShowCorrectAnswer)
+                        {
+                            <p class="mt-2 correct-answer show">✅ Rätt svar: @question.CorrectAnswer</p>
+                        }
                     </div>
-                </div>
-            }
-
-            @if (quizQuestions.All(q => q.SelectedAnswer != null) && !quizCompleted)
-            {
-                <div class="text-center mt-3">
-                    <button class="btn btn-success" @onclick="ConfirmQuizCompletion">Visa resultat</button>
-                </div>
-            }
-
-
-            @if (quizCompleted)
-            {
-                <div class="text-center mt-3">
-                    <h4>Du fick @GetCorrectAnswersCount() av @quizQuestions.Count rätt! 🎉</h4>
-                    <button class="btn btn-primary mt-3" @onclick="RestartQuiz">🔄 Generera nytt quiz om @lastTopic</button>
                 </div>
             }
         </div>
     }
 
+
+
 </div>
+
+<!-- Quiz Prompt Suggestions -->
+<div class="container mt-5 p-4 border rounded shadow bg-white">
+    <h3 class="text-center mb-3">📝 Skapa ett roligt och lärorikt quiz!</h3>
+    <p>Här är fem exempel på prompts du kan använda för att generera quizfrågor:</p>
+    <ul>
+        <li><strong>🧮 Matematik:</strong> "Skapa ett quiz med 10 frågor om bråktal för årskurs 6. Använd flervalsfrågor med tydliga svarsalternativ."</li>
+        <li><strong>🌍 Geografi:</strong> "Generera 10 quizfrågor om Europas länder och huvudstäder. Varje fråga ska ha fyra alternativ, där ett är rätt."</li>
+        <li><strong>🔬 Naturvetenskap:</strong> "Gör ett quiz med 10 frågor om fotosyntesen. Frågorna ska vara anpassade för högstadieelever."</li>
+        <li><strong>📜 Historia:</strong> "Skapa ett quiz med 10 frågor om industriella revolutionen. Frågorna ska vara en blandning av flervals- och sant/falskt-frågor."</li>
+        <li><strong>⚽ Fritidsintresse:</strong> "Gör ett quiz med 10 frågor om fotbollsregler och historiska händelser inom sporten. Frågorna ska passa både nybörjare och fotbollsfans."</li>
+    </ul>
+    <p>Testa en prompt och skapa ditt eget quiz! 🎯</p>
+</div>
+
 
 @code {
     private bool isLoading = false;
@@ -151,11 +160,19 @@
     }
 
     // Uppdaterad CheckAnswer-metod
-    private void CheckAnswer(QuizQuestionModel question, string selectedOption)
+    private async Task CheckAnswer(QuizQuestionModel question, string selectedOption)
     {
         question.SelectedAnswer = selectedOption;
+
+        // Vänta lite för att ge en visuell effekt
+        await Task.Delay(500);
+
+        // Lägg till en klass för att highlighta rätt svar
+        question.ShowCorrectAnswer = true;
+
         StateHasChanged();
     }
+
 
 
 
@@ -223,4 +240,23 @@
     }
 
 }
+
+<style>
+    .correct-answer {
+        background-color: #28a745 !important; /* Grön */
+        color: white;
+        transition: opacity 0.8s ease-in-out;
+        opacity: 0;
+    }
+
+    .show {
+        opacity: 1;
+    }
+
+    .wrong-answer {
+        background-color: #dc3545 !important; /* Röd */
+        color: white;
+    }
+
+</style>
 
