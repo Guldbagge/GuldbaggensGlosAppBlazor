@@ -63,20 +63,27 @@
         </div>
     }
 
+    @if (quizCompleted)
+    {
+        <div class="quiz-result text-center mt-4 p-3 border rounded">
+            <h3>🎉 Quiz avslutat!</h3>
+            <p>Du fick <strong>@GetCorrectAnswersCount()</strong> av <strong>@quizQuestions.Count</strong> rätt! ✅</p>
+            <button class="btn btn-primary mt-2" @onclick="RestartQuiz">🔄 Ladda om sidan</button>
+        </div>
+    }
 
 
 </div>
 
-<!-- Quiz Prompt Suggestions -->
 <div class="container mt-5 p-4 border rounded shadow bg-white">
     <h3 class="text-center mb-3">📝 Skapa ett roligt och lärorikt quiz!</h3>
     <p>Här är fem exempel på prompts du kan använda för att generera quizfrågor:</p>
     <ul>
-        <li><strong>🧮 Matematik:</strong> "Skapa ett quiz med 10 frågor om bråktal för årskurs 6. Använd flervalsfrågor med tydliga svarsalternativ."</li>
-        <li><strong>🌍 Geografi:</strong> "Generera 10 quizfrågor om Europas länder och huvudstäder. Varje fråga ska ha fyra alternativ, där ett är rätt."</li>
-        <li><strong>🔬 Naturvetenskap:</strong> "Gör ett quiz med 10 frågor om fotosyntesen. Frågorna ska vara anpassade för högstadieelever."</li>
-        <li><strong>📜 Historia:</strong> "Skapa ett quiz med 10 frågor om industriella revolutionen. Frågorna ska vara en blandning av flervals- och sant/falskt-frågor."</li>
-        <li><strong>⚽ Fritidsintresse:</strong> "Gör ett quiz med 10 frågor om fotbollsregler och historiska händelser inom sporten. Frågorna ska passa både nybörjare och fotbollsfans."</li>
+        <li><strong>🧮 Matematik:</strong> "Bråktal för årskurs 6. Använd flervalsfrågor med tydliga svarsalternativ."</li>
+        <li><strong>🌍 Geografi:</strong> "Europas länder och huvudstäder. Varje fråga ska ha fyra alternativ, där ett är rätt."</li>
+        <li><strong>🔬 Naturvetenskap:</strong> "Fotosyntesen. Frågorna ska vara anpassade för högstadieelever."</li>
+        <li><strong>📜 Historia:</strong> "Industriella revolutionen."</li>
+        <li><strong>⚽ Fritidsintresse:</strong> "Fotbollsregler och historiska händelser inom sporten. Frågorna ska passa både nybörjare och fotbollsfans."</li>
     </ul>
     <p>Testa en prompt och skapa ditt eget quiz! 🎯</p>
 </div>
@@ -87,10 +94,13 @@
     private string userMessage = "";
     private string apiToken = "";
     private AiResponse? aiComponent;
+    private bool quizCompleted = false;
+   
     
     private List<QuizQuestionModel> quizQuestions = new List<QuizQuestionModel>();
 
     [Inject] private IJSRuntime jsRuntime { get; set; } = default!;
+    
 
     private string GetApiToken()
     {
@@ -99,7 +109,7 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        apiToken = GetApiToken(); // Lägg till API-nyckeln här
+        apiToken = GetApiToken(); 
 
         if (firstRender)
         {
@@ -171,15 +181,16 @@
 
         StateHasChanged();
 
-        // Vänta lite för att ge en visuell effekt
+       
         await Task.Delay(500);
+
+        if (quizQuestions.All(q => q.SelectedAnswer != null))
+        {
+            ConfirmQuizCompletion();
+        }
 
         StateHasChanged();
     }
-
-
-
-
 
 
     private void ScrollToTop()
@@ -187,10 +198,6 @@
         jsRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
     }
 
-    private bool quizCompleted = false;
-    private string lastTopic = "";
-
-    // Metod för att räkna antal rätt svar
     private int GetCorrectAnswersCount()
     {
         return quizQuestions.Count(q => q.SelectedAnswer == q.CorrectAnswer);
@@ -201,47 +208,11 @@
         StateHasChanged();
     }
 
-
-
-    // Metod för att starta om quizet
-    private async Task RestartQuiz()
+    private void RestartQuiz()
     {
+        quizQuestions.Clear();
         quizCompleted = false;
-        await GetAIQuiz(lastTopic);
-    }
-
-    // Uppdaterad GetAIQuiz-metod
-    private async Task GetAIQuiz(string topic = "")
-    {
-        if (!string.IsNullOrWhiteSpace(userMessage))
-        {
-            lastTopic = userMessage; // Spara ämnet
-        }
-
-        if (!string.IsNullOrWhiteSpace(topic))
-        {
-            userMessage = topic; // Använd senaste ämnet om det finns
-        }
-
-        if (aiComponent is not null)
-        {
-            isLoading = true;
-            StateHasChanged();
-
-            string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. Format: Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar";
-            aiComponent.UserMessage = prompt;
-            aiComponent.ApiToken = apiToken;
-            await aiComponent.GetAIResponse();
-
-            userMessage = "";
-            isLoading = false;
-            quizCompleted = false; // Återställ quizCompleted när nytt quiz genereras
-            StateHasChanged();
-        }
-        else
-        {
-            Logger.LogError("🚨 aiComponent är null!");
-        }
+        StateHasChanged();
     }
 
 }
