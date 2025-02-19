@@ -3,6 +3,7 @@ using GlosApp.Components;
 using GlosApp.Components.Account;
 using GlosApp.Data;
 using GlosApp.Services;
+using GlosApp.Services.Horse;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddSingleton<ConfigurationService>();
+builder.Services.AddScoped<HorseDiaryService>();
+builder.Services.AddScoped<HorseHealthService>();
 
 // Add MudBlazor services diagram -- builder.Services.AddMudServices();
 

@@ -1,0 +1,180 @@
+﻿@page "/horse-diary"
+@using GlosApp.Models.Horse
+@using GlosApp.Services.Horse
+@using GlosApp.Models
+@inject HorseDiaryService DiaryService
+@inject HorseHealthService HealthService
+@rendermode InteractiveServer
+
+<div class="horse container">
+    <h3 class="heading">Trombs Dagbok 🐎</h3>
+
+    <!-- Sjukdomssymbol -->
+    <button @onclick="ToggleHealthForm" class="health-symbol">⚕️</button>
+
+    <!-- Banner om text finns -->
+    @if (!string.IsNullOrWhiteSpace(healthStatus.StatusText))
+    {
+        <div class="health-banner" style="background-color:@healthStatus.Color.ToLower()">
+            <strong>@healthStatus.StatusText</strong>
+        </div>
+    }
+
+    <!-- Hälsostatus-formulär -->
+    @if (showHealthForm)
+    {
+        <div class="health-form">
+            <h4>Hälsostatus</h4>
+            <InputTextArea @bind-Value="healthStatus.StatusText" placeholder="Skriv hälsostatus här..." />
+            <select @bind="healthStatus.Color">
+                <option value="Green">Grön</option>
+                <option value="Yellow">Gul</option>
+                <option value="Red">Röd</option>
+            </select>
+            <button @onclick="SaveHealthStatus">Spara</button>
+        </div>
+    }
+
+    <!-- Dagboksformulär -->
+    <EditForm Model="@newEntry" OnValidSubmit="SaveEntry" FormName="DiaryForm" class="diary-form">
+        <DataAnnotationsValidator />
+
+        <div>
+            <label>Datum:</label>
+            <InputDate @bind-Value="newEntry.Date" />
+        </div>
+
+        <div>
+            <label>Antal minuters ridning:</label>
+            <InputNumber @bind-Value="newEntry.RidingMinutes" />
+        </div>
+
+        <div>
+            <label>Typ av ridning:</label>
+            <div>
+                <InputCheckbox @bind-Value="selectedTypes[0]" /> Hoppning
+                <InputCheckbox @bind-Value="selectedTypes[1]" /> Dressyr
+                <InputCheckbox @bind-Value="selectedTypes[2]" /> Skogstur
+            </div>
+        </div>
+
+        <div>
+            <label>Hur hårt var passet?</label>
+            <select @bind="newEntry.Intensity">
+                <option value="Lätt">Lätt</option>
+                <option value="Medel">Medel</option>
+                <option value="Hårt">Hårt</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Vem red hästen?</label>
+            <select @bind="newEntry.Rider">
+                <option value="Alma">Alma</option>
+                <option value="Elin">Elin</option>
+            </select>
+            <InputText @bind-Value="customRider" placeholder="Ange namn om annan" />
+        </div>
+
+        <div>
+            <label>Anteckningar:</label>
+            <InputTextArea @bind-Value="newEntry.Notes" />
+        </div>
+
+        <button type="submit">Spara</button>
+    </EditForm>
+
+
+    <hr />
+
+    <h3>Dagboksanteckningar</h3>
+     @if (selectedEntry != null)
+    {
+        <div class="diary-details">
+            <h4>Detaljer</h4>
+            <p><strong>Datum:</strong> @selectedEntry.Date.ToString("yyyy-MM-dd dddd")</p>
+            <p><strong>Ridning:</strong> @string.Join(", ", selectedEntry.RidingTypes)</p>
+            <p><strong>Intensitet:</strong> @selectedEntry.Intensity</p>
+            <p><strong>Ryttare:</strong> @selectedEntry.Rider</p>
+            <p><strong>Anteckningar:</strong> @selectedEntry.Notes</p>
+            <button class="btn btn-secondary" @onclick="() => selectedEntry = null">Stäng</button>
+
+
+        </div>
+    }
+    @if (entries == null)
+    {
+        <p>Laddar...</p>
+    }
+    else if (!entries.Any())
+    {
+        <p>Inga anteckningar ännu.</p>
+    }
+    else
+    {
+        @foreach (var entry in entries)
+        {
+            <div @onclick="() => ShowEntry(entry)" class="diary-card">
+                <strong>@entry.Date.ToString("yyyy-MM-dd dddd")</strong>
+            </div>
+        }
+    }
+
+   
+    </div>
+
+@code {
+    private HorseDiaryEntry newEntry = new();
+    private List<HorseDiaryEntry> entries = new();
+    private HorseDiaryEntry selectedEntry;
+    private bool[] selectedTypes = new bool[3];
+    private string customRider = string.Empty;
+    private bool showHealthForm;
+    private HorseHealthStatus healthStatus = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        entries = await DiaryService.GetEntriesAsync();
+        healthStatus = await HealthService.GetHealthStatusAsync();
+    }
+
+    private async Task SaveEntry()
+    {
+        newEntry.RidingTypes = GetSelectedTypes();
+        if (!string.IsNullOrWhiteSpace(customRider))
+        {
+            newEntry.Rider = customRider;
+        }
+
+        await DiaryService.AddEntryAsync(newEntry);
+        entries = await DiaryService.GetEntriesAsync();
+        newEntry = new();
+        customRider = string.Empty;
+        selectedTypes = new bool[3];
+    }
+
+    private async Task SaveHealthStatus()
+    {
+        await HealthService.UpdateHealthStatusAsync(healthStatus);
+        showHealthForm = false;
+    }
+
+    private void ToggleHealthForm()
+    {
+        showHealthForm = !showHealthForm;
+    }
+
+    private List<string> GetSelectedTypes()
+    {
+        var types = new List<string>();
+        if (selectedTypes[0]) types.Add("Hoppning");
+        if (selectedTypes[1]) types.Add("Dressyr");
+        if (selectedTypes[2]) types.Add("Skogstur");
+        return types;
+    }
+
+    private void ShowEntry(HorseDiaryEntry entry)
+    {
+        selectedEntry = entry;
+    }
+}
