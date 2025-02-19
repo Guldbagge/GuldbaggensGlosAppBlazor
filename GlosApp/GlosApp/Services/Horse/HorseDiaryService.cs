@@ -25,6 +25,12 @@ namespace GlosApp.Services.Horse
             _context.HorseDiaryEntries.Add(entry);
             await _context.SaveChangesAsync();
         }
+        public async Task DeleteEntryAsync(HorseDiaryEntry entry)
+        {
+            _context.HorseDiaryEntries.Remove(entry);
+            await _context.SaveChangesAsync();
+        }
+
     }
 
 }

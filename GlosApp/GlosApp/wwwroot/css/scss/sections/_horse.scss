@@ -5,13 +5,13 @@ $background-color: #F9F9F9;
 $text-color: #333;
 
 .horse {
-    .heading{
-        display:flex;
-        text-align:center;
-        justify-content:center;
+    .heading {
+        display: flex;
+        text-align: center;
+        justify-content: center;
     }
-        
-        .health-symbol {
+
+    .health-symbol {
         background: none;
         border: none;
         font-size: 2rem;
@@ -103,6 +103,9 @@ $text-color: #333;
     }
 
     .diary-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         background: white;
         padding: 15px;
         margin-bottom: 10px;
@@ -110,6 +113,20 @@ $text-color: #333;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         cursor: pointer;
         transition: transform 0.2s;
+
+        .delete-button {
+            margin-left: 10px;
+            background-color: white;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: red;
+        }
     }
 
     .diary-card:hover {

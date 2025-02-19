@@ -115,8 +115,9 @@
     {
         @foreach (var entry in entries)
         {
-            <div @onclick="() => ShowEntry(entry)" class="diary-card">
-                <strong>@entry.Date.ToString("yyyy-MM-dd dddd")</strong>
+            <div class="diary-card">
+                <strong @onclick="() => ShowEntry(entry)">@entry.Date.ToString("yyyy-MM-dd dddd")</strong>
+                <button class="btn btn-danger delete-button" @onclick="() => DeleteEntry(entry)">🗑️</button>
             </div>
         }
     }
@@ -177,5 +178,11 @@
     private void ShowEntry(HorseDiaryEntry entry)
     {
         selectedEntry = entry;
+    }
+
+    private async Task DeleteEntry(HorseDiaryEntry entry)
+    {
+        await DiaryService.DeleteEntryAsync(entry);
+        entries = await DiaryService.GetEntriesAsync(); // Uppdatera listan
     }
 }
