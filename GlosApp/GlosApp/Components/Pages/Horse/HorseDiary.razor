@@ -49,14 +49,27 @@
             <InputNumber @bind-Value="newEntry.RidingMinutes" />
         </div>
 
-        <div>
+        <div class="group-typ">
             <label>Typ av ridning:</label>
-            <div>
-                <InputCheckbox @bind-Value="selectedTypes[0]" /> Hoppning
-                <InputCheckbox @bind-Value="selectedTypes[1]" /> Dressyr
-                <InputCheckbox @bind-Value="selectedTypes[2]" /> Skogstur
+            <div class="typs">
+                <div class="typ">
+                    <div>Hoppning</div>
+                    <div class="check"><InputCheckbox @bind-Value="selectedTypes[0]" /></div>
+                    
+                </div>
+                <div class="typ">
+                    <div>Dressyr</div>
+                    <div class="check"><InputCheckbox @bind-Value="selectedTypes[1]" /></div>
+                    
+                </div>
+                <div class="typ">
+                    <div>Skogstur</div>
+                    <div class="check"><InputCheckbox @bind-Value="selectedTypes[2]" /></div>
+                    
+                </div>
             </div>
         </div>
+
 
         <div>
             <label>Hur hårt var passet?</label>

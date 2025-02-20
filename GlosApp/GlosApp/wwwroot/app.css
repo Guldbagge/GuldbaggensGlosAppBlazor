@@ -322,6 +322,30 @@ button:disabled {
   max-width: 500px;
   margin: 20px auto;
 }
+.horse .diary-form .group-typ {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 10px;
+  border-radius: 8px;
+}
+.horse .diary-form .group-typ .typs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.horse .diary-form .group-typ .typs .typ {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Gör att texten går till vänster och checkboxen till höger */
+}
+.horse .diary-form .group-typ .typs .typ:hover {
+  background-color: #eaeaea;
+}
+.horse .diary-form .group-typ .typs .typ:active {
+  transform: scale(0.98);
+}
 .horse .diary-form label {
   font-weight: bold;
   display: block;
@@ -331,6 +355,7 @@ button:disabled {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
+  margin-top: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
