@@ -6,11 +6,13 @@
 @inject HorseHealthService HealthService
 @rendermode InteractiveServer
 
-<div class="horse container">
-    <h3 class="heading">Trombs Dagbok 🐎</h3>
+ <div class="container horse">
+    <div class="heading">
+        <h3 class="heading mb-0">🐎 Trombs Dagbok</h3>
+        <button @onclick="ToggleHealthForm" class="health-symbol">⚕️</button>
+    </div>
 
-    <!-- Sjukdomssymbol -->
-    <button @onclick="ToggleHealthForm" class="health-symbol">⚕️</button>
+
 
     <!-- Banner om text finns -->
     @if (!string.IsNullOrWhiteSpace(healthStatus.StatusText))
@@ -136,7 +138,7 @@
     }
 
    
-    </div>
+ </div>
 
 @code {
     private HorseDiaryEntry newEntry = new();
@@ -151,6 +153,9 @@
     {
         entries = await DiaryService.GetEntriesAsync();
         healthStatus = await HealthService.GetHealthStatusAsync();
+        var culture = new System.Globalization.CultureInfo("sv-SE");
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+        System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
     }
 
     private async Task SaveEntry()

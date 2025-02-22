@@ -262,22 +262,22 @@ button:disabled {
   cursor: not-allowed !important;
 }
 
-.horse {
-  /* Modern och snygg SCSS-design */
-}
 .horse .heading {
+  margin: 0;
   display: flex;
-  text-align: center;
   justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
 }
-.horse .health-symbol {
+.horse .heading .health-symbol {
   background: none;
   border: none;
   font-size: 2rem;
   cursor: pointer;
   transition: transform 0.2s;
 }
-.horse .health-symbol:hover {
+.horse .heading .health-symbol:hover {
   transform: scale(1.1);
 }
 .horse .health-banner {
@@ -327,7 +327,7 @@ button:disabled {
   flex-direction: column;
   gap: 8px;
   margin-bottom: 16px;
-  padding: 10px;
+  padding: 0;
   border-radius: 8px;
 }
 .horse .diary-form .group-typ .typs {
@@ -338,7 +338,7 @@ button:disabled {
 .horse .diary-form .group-typ .typs .typ {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Gör att texten går till vänster och checkboxen till höger */
+  justify-content: space-between;
 }
 .horse .diary-form .group-typ .typs .typ:hover {
   background-color: #eaeaea;
@@ -359,6 +359,18 @@ button:disabled {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
+}
+.horse .diary-form select {
+  height: 40px;
+}
+.horse .diary-form input[type=date],
+.horse .diary-form select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: white !important;
+  color: black !important;
+  padding: 5px;
+  border-radius: 4px;
 }
 .horse .diary-form button {
   background: #4CAF50;

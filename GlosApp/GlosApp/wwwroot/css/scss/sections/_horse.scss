@@ -5,23 +5,31 @@ $background-color: #F9F9F9;
 $text-color: #333;
 
 .horse {
+
+
+
     .heading {
+        margin: 0;
         display: flex;
-        text-align: center;
         justify-content: center;
-    }
+        align-items: center;
+        gap: 10px;
+        text-align: center;
 
-    .health-symbol {
-        background: none;
-        border: none;
-        font-size: 2rem;
-        cursor: pointer;
-        transition: transform 0.2s;
 
-        &:hover {
-            transform: scale(1.1);
+        .health-symbol {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+
+            &:hover {
+                transform: scale(1.1);
+            }
         }
     }
+
 
     .health-banner {
         padding: 1rem;
@@ -61,7 +69,7 @@ $text-color: #333;
             }
         }
     }
-    /* Modern och snygg SCSS-design */
+
 
     .diary-form {
         background: #f9f9f9;
@@ -72,12 +80,11 @@ $text-color: #333;
         margin: 20px auto;
 
         .group-typ {
-
             display: flex;
             flex-direction: column;
             gap: 8px;
             margin-bottom: 16px;
-            padding: 10px;
+            padding: 0;
             border-radius: 8px;
 
             .typs {
@@ -88,8 +95,8 @@ $text-color: #333;
                 .typ {
                     display: flex;
                     align-items: center;
-                    justify-content: space-between; /* Gör att texten går till vänster och checkboxen till höger */
-                   
+                    justify-content: space-between;
+
 
                     &:hover {
                         background-color: #eaeaea;
@@ -98,8 +105,6 @@ $text-color: #333;
                     &:active {
                         transform: scale(0.98);
                     }
-
-                    
                 }
             }
         }
@@ -119,6 +124,20 @@ $text-color: #333;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+        }
+
+        select {
+            height: 40px;
+        }
+
+        input[type="date"],
+        select {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: white !important;
+            color: black !important;
+            padding: 5px;
+            border-radius: 4px;
         }
 
         button {
