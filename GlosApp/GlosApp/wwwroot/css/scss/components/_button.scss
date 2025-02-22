@@ -1,10 +1,14 @@
 ﻿.btn-primary {
-    background-color: (#194C67);
-    border: #194C67;
+    background-color: #194C67;
+    border: 1px solid #194C67;
     border-radius: 0.5rem;
     width: 6rem;
+    height: 38px; /* Matchar Bootstrap-knappar */
+    font-size: 16px; /* Samma storlek som Bootstrap-knappar */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-    @media (min-width: 1200px) {
-
+.btn-primary:hover {
+    background-color: #156089; /* En snyggare blå nyans vid hover */
+    border-color: #156089;
 }
