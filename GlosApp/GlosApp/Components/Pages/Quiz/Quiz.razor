@@ -1,7 +1,8 @@
 ﻿@page "/quiz"
 @using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager Navigation
-
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
 
 
 
@@ -26,7 +27,14 @@
 
 
 @code {
-
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("scrollToTop");
+        }
+    }
 }
+
 
 

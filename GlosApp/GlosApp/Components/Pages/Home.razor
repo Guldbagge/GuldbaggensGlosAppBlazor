@@ -163,11 +163,42 @@
 
            
             await JSRuntime.InvokeVoidAsync("scrollTo", 0, 0);
+
+
+            if (!horseImageUrls.Any())
+            {
+                horseImageUrls.Add("/images/braden-collum-9HI8UJMSdZA-unsplash.jpg");
+                horseImageUrls.Add("/images/karsten-winegeart-0Wra5YYVQJE-unsplash.jpg");
+                horseImageUrls.Add("/images/markus-spiske-WUehAgqO5hE-unsplash.jpg");
+            }
+
+            if (!danceImageUrls.Any())
+            {
+                danceImageUrls.Add("/images/pietro-de-grandi-T7K4aEPoGGk-unsplash.jpg");
+                danceImageUrls.Add("/images/rohit-tandon-9wg5jCEPBsw-unsplash.jpg");
+                danceImageUrls.Add("/images/tim-stief-YFFGkE3y4F8-unsplash.jpg");
+            }
+
+            await JSRuntime.InvokeVoidAsync("scrollTo", 0, 0);
         }
         catch (Exception ex)
         {
-           
             Console.WriteLine($"Error fetching images: {ex.Message}");
+
+            // Använd fallback-bilder om API-anropet misslyckas helt
+            horseImageUrls = new List<string>
+        {
+            "/images/braden-collum-9HI8UJMSdZA-unsplash.jpg",
+            "/images/karsten-winegeart-0Wra5YYVQJE-unsplash.jpg",
+            "/images/markus-spiske-WUehAgqO5hE-unsplash.jpg"
+        };
+
+            danceImageUrls = new List<string>
+        {
+            "/images/pietro-de-grandi-T7K4aEPoGGk-unsplash.jpg",
+            "/images/rohit-tandon-9wg5jCEPBsw-unsplash.jpg",
+            "/images/tim-stief-YFFGkE3y4F8-unsplash.jpg"
+        };
         }
     }
 
@@ -197,3 +228,5 @@
         public string regular { get; set; } = null!;
     }
 }
+
+

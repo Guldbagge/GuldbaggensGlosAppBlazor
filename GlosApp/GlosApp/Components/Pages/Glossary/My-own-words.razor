@@ -4,7 +4,6 @@
 @using GlosApp.Models
 @inject ApplicationDbContext DbContext
 
-
 <div class="container min-vh-100 d-flex flex-column" style="margin-top: 70px;">
     <h3>Mina egna glossor</h3>
 
@@ -28,13 +27,17 @@
         </div>
     </div>
 
-    <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
-        @if (IsLoading)
-        {
-            <p>Laddar glosor...</p>
-        }
-        else
-        {
+    @if (IsLoading)
+    {
+        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Laddar...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <EditForm Model="userAnswerForm" OnValidSubmit="CheckAnswers" novalidate autocomplete="off">
             @foreach (var answer in userAnswerForm.Answers)
             {
                 <div class="form-group">
@@ -74,8 +77,8 @@
 
             <button type="submit" class="btn btn-primary mt-4">Rätta</button>
             <button type="button" class="btn btn-success mt-4" @onclick="ResetForm">Rensa glosformuläret</button>
-        }
-    </EditForm>
+        </EditForm>
+    }
 </div>
 
 @code {
@@ -87,24 +90,28 @@
     private AiResponse? aiComponent;
     [Inject] private IJSRuntime jsRuntime { get; set; } = default!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        LoadWords();
+        await LoadWords();
     }
 
-    private void LoadWords()
+    private async Task LoadWords()
     {
+        IsLoading = true;
+        StateHasChanged();
+
         // Hämta orden från databasen
-        var words = DbContext.WordAnswers.Where(w => w.Language == "Test").ToList();
+        var words = await Task.Run(() => DbContext.WordAnswers.Where(w => w.Language == "Test").ToList());
         userAnswerForm.Answers = words.Select(w => new WordAnswer
-            {
-                Id = w.Id,
-                Swedish = w.Swedish,
-                English = w.English,
-                UserAnswer = string.Empty
-            }).ToList();
+        {
+            Id = w.Id,
+            Swedish = w.Swedish,
+            English = w.English,
+            UserAnswer = string.Empty
+        }).ToList();
 
         IsLoading = false;
+        StateHasChanged();
     }
 
     private void CheckAnswers()
@@ -145,4 +152,3 @@
         jsRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
     }
 }
-
