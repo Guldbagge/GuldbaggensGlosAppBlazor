@@ -21,7 +21,7 @@
     <div class="input-group mt-3">
         <input type="text" class="form-control" @bind="userMessage" placeholder="Skriv din fråga här..." />
         <button class="btn btn-primary ms-2 px-4" @onclick="GetAIResponse" disabled="@isLoading">
-            @(isLoading ? "Väntar..." : "Fråga")
+            @(isLoading ? "Väntar..." : "Svara")
         </button>
     </div>
 </div>

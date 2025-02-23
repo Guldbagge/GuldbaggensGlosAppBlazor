@@ -3,9 +3,21 @@
 @inject ApplicationDbContext DbContext
 @rendermode InteractiveServer
 
-<div class="container min-vh-100 d-flex flex-column" style="margin-top: 70px;">
-
+<div class="container min-vh-100 d-flex flex-column " style="margin-top: 70px;">
     <h3>Hantera Dina Egna Glosor</h3>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">📖 Skapa Effektiva Glosor</h4>
+            <p class="card-text">När du skapar glosor, tänk på följande:</p>
+            <ul>
+                <li><strong>Välj ett ämne:</strong> Fokusera på specifika teman, t.ex. resor, ekonomi eller anatomi.</li>
+                <li><strong>Anpassa svårighetsgraden:</strong> Börja med enkla ord och öka svårigheten gradvis.</li>
+                <li><strong>Använd sammanhang:</strong> Skriv exempelmeningar för att bättre förstå användningen.</li>
+                <li><strong>Uttal och stavning:</strong> Tänk på att inkludera ljudfiler eller fonetisk skrift vid behov.</li>
+            </ul>
+        </div>
+    </div>
 
     <div class="mb-3">
         <button class="btn btn-primary" @onclick="ShowAddModal">Lägg till</button>

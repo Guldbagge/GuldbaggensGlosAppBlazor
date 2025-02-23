@@ -577,13 +577,17 @@ button:disabled {
   border: 1px solid #194C67;
   border-radius: 0.5rem;
   width: 6rem;
-  height: 38px; /* Matchar Bootstrap-knappar */
-  font-size: 16px; /* Samma storlek som Bootstrap-knappar */
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  height: 38px;
+  font-size: 16px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .btn-primary:hover {
-  background-color: #156089; /* En snyggare blå nyans vid hover */
+  background-color: #156089;
   border-color: #156089;
 }
 
