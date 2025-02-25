@@ -1,4 +1,5 @@
 ﻿@page "/story-writing"
+@using Markdig
 
 @inject ILogger<Ai> Logger
 @rendermode InteractiveServer
@@ -18,15 +19,34 @@
         <div class="input-group mt-3">
             <textarea class="form-control larger-textarea expanding-textarea" @bind="userMessage" placeholder="Skriv din berättelse här..."></textarea>
         </div>
-   
+
+        <div class="year-selection d-flex justify-content-center my-3">
+            <p class="me-2">Välj årskurs:</p>
+            @foreach (int grade in Enumerable.Range(4, 6)) // Skapar knappar för årskurs 4-9
+            {
+                <button class="btn @(selectedGrade == grade ? "btn-secondary" : "btn-outline-secondary") me-1"
+                        @onclick="@(() => SelectGrade(grade))">
+                    Årskurs @grade
+                </button>
+            }
+        </div>
+
         <button class="btn btn-primary me-2 mt-2 px-4" @onclick="GetAIResponse" disabled="@isLoading">
             @(isLoading ? "Väntar..." : "Respons")
         </button>
 
-        <div>
+        <div class="d-none">
             <AiResponse @ref="aiComponent" UserMessage="@modifiedMessage" ApiToken="@apiToken" OnResponseReceived="HandleResponse" />
 
         </div>
+
+        @if (!string.IsNullOrEmpty(formattedResponse))
+        {
+            <div class="ai-response mt-4 p-3 border rounded">
+                @((MarkupString)formattedResponse)
+            </div>
+        }
+
     </div>
 
     <div class="tips-container d-flex flex-column flex-md-row justify-content-between mt-4">
@@ -49,7 +69,7 @@
 
 <style>
     .expanding-textarea {
-        min-height: 80px;
+        min-height: 200px;
         max-height: 300px;
         overflow-y: auto;
     }
@@ -66,6 +86,20 @@
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
+    .ai-response h4 {
+        color: #0056b3;
+        margin-top: 1rem;
+    }
+
+    .ai-response ul {
+        padding-left: 1.5rem;
+    }
+
+    .ai-response li {
+        margin-bottom: 0.5rem;
+    }
+
 </style>
 
 
@@ -85,6 +119,14 @@
         }
     }
 
+    private int selectedGrade = 7; 
+
+    private void SelectGrade(int grade)
+    {
+        selectedGrade = grade;
+        StateHasChanged(); // Uppdaterar UI
+    }
+
     private async Task GetAIResponse()
     {
         apiToken = Configuration["ApiKeys:ServiceA"] ?? "API-nyckel saknas";
@@ -98,13 +140,14 @@
             string originalMessage = userMessage;
 
             // Skapa modifierad prompt
-            modifiedMessage = $"Du är en lärare som ger respons på en text skriven av en elev i årskurs 7. " +
-                              "Din uppgift är att: " +
-                              "1. Identifiera stavfel och grammatiska fel. " +
-                              "2. Ge allmän feedback om textens innehåll och struktur. " +
-                              "3. Svara på svenska. " +
-                              "4. Håll responsen kort – max 100 ord. " +
-                              $"Här är elevens text: {userMessage}";
+            modifiedMessage = $"Du är en lärare som ger respons på en text skriven av en elev i årskurs {selectedGrade}. " +
+                              "Din uppgift är att identifiera följande och svara i tre separata sektioner: " +
+                              "1. **Stavning**: Lista stavfel och föreslå korrekta stavningar. " +
+                              "2. **Grammatik**: Identifiera grammatiska fel och ge exempel på förbättringar. " +
+                              "3. **Allmän feedback**: Ge kort feedback om textens innehåll, flyt och struktur. " +
+                              "Använd tydliga rubriker och radbrytningar. Här är elevens text:\n\n" +
+                              $"{userMessage}";
+
 
             // Säkerställ att modifiedMessage uppdateras i UI
             StateHasChanged();
@@ -127,10 +170,26 @@
         }
     }
 
+
+
+    private string formattedResponse = "";
+
     private void HandleResponse(string response)
     {
         Logger.LogInformation($"AI-svar mottaget: {response}");
+
+
+    formattedResponse = response
+    .Replace("### ", "<h3>") // Konvertera större rubriker om de finns
+    .Replace("**", "<strong>") // Gör fetstil korrekt
+    .Replace("\n- ", "<li>") // Omvandla listpunkter
+    .Replace("\n", "<br>") // Behåll radbrytningar
+    .Replace("<br><li>", "<ul><li>") // Se till att listan öppnas korrekt
+    + "</ul>"; // Stäng listan
+
+        formattedResponse = Markdown.ToHtml(response);
     }
+
 
     private void ScrollToTop()
     {

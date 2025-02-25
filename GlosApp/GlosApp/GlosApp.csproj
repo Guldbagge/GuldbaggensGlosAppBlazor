@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GlosApp.Client\GlosApp.Client.csproj" />
+    <PackageReference Include="Markdig" Version="0.40.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.0" /> <!-- Uppdatera till 9.0.0 -->
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.0" /> <!-- Uppdatera till 9.0.0 -->
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" /> <!-- Uppdatera till 9.0.0 -->
