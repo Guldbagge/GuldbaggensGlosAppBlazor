@@ -140,30 +140,25 @@
     {
         try
         {
-            
             var horseResponse = await Http.GetStringAsync("https://api.unsplash.com/photos/random?query=sport&count=3&client_id=KskWzvW414fiXTLDuI8evhu2N5DdnATSMHR_6tEGY3k");
+            Console.WriteLine($"Horse API Response: {horseResponse}"); // Logga för att kolla API-responsen
             var horsePhotoData = JsonSerializer.Deserialize<List<Photo>>(horseResponse);
 
-            
             horseImageUrls = horsePhotoData?
                 .Select(photo => photo.urls?.regular)
-                .Where(url => url != null) 
-                .Select(url => url!) 
-                .ToList() ?? new List<string>(); 
+                .Where(url => url != null)
+                .Select(url => url!)
+                .ToList() ?? new List<string>();
 
-            
             var danceResponse = await Http.GetStringAsync("https://api.unsplash.com/photos/random?query=dance&count=3&client_id=KskWzvW414fiXTLDuI8evhu2N5DdnATSMHR_6tEGY3k");
+            Console.WriteLine($"Dance API Response: {danceResponse}"); // Logga för att kolla API-responsen
             var dancePhotoData = JsonSerializer.Deserialize<List<Photo>>(danceResponse);
 
             danceImageUrls = dancePhotoData?
                 .Select(photo => photo.urls?.regular)
-                .Where(url => url != null) 
-                .Select(url => url!) 
-                .ToList() ?? new List<string>(); 
-
-           
-            await JSRuntime.InvokeVoidAsync("scrollTo", 0, 0);
-
+                .Where(url => url != null)
+                .Select(url => url!)
+                .ToList() ?? new List<string>();
 
             if (!horseImageUrls.Any())
             {
@@ -179,28 +174,35 @@
                 danceImageUrls.Add("/images/tim-stief-YFFGkE3y4F8-unsplash.jpg");
             }
 
-            await JSRuntime.InvokeVoidAsync("scrollTo", 0, 0);
+            await JSRuntime.InvokeVoidAsync("scrollTo", 0, 0); // En gång efter allt är klart
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error fetching images: {ex.Message}");
 
-            // Använd fallback-bilder om API-anropet misslyckas helt
-            horseImageUrls = new List<string>
+            if (!horseImageUrls.Any()) // Endast om listan är tom
+            {
+                horseImageUrls = new List<string>
         {
             "/images/braden-collum-9HI8UJMSdZA-unsplash.jpg",
             "/images/karsten-winegeart-0Wra5YYVQJE-unsplash.jpg",
             "/images/markus-spiske-WUehAgqO5hE-unsplash.jpg"
         };
+            }
 
-            danceImageUrls = new List<string>
+            if (!danceImageUrls.Any()) // Endast om listan är tom
+            {
+                danceImageUrls = new List<string>
         {
             "/images/pietro-de-grandi-T7K4aEPoGGk-unsplash.jpg",
             "/images/rohit-tandon-9wg5jCEPBsw-unsplash.jpg",
             "/images/tim-stief-YFFGkE3y4F8-unsplash.jpg"
         };
+            }
         }
+
     }
+
 
     public class VisitorCounterService
 

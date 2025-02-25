@@ -20,16 +20,21 @@
             <textarea class="form-control larger-textarea expanding-textarea" @bind="userMessage" placeholder="Skriv din berättelse här..."></textarea>
         </div>
 
-        <div class="year-selection d-flex justify-content-center my-3">
-            <p class="me-2">Välj årskurs:</p>
-            @foreach (int grade in Enumerable.Range(4, 6)) // Skapar knappar för årskurs 4-9
-            {
-                <button class="btn @(selectedGrade == grade ? "btn-secondary" : "btn-outline-secondary") me-1"
-                        @onclick="@(() => SelectGrade(grade))">
-                    Årskurs @grade
-                </button>
-            }
+        <div class="year-selection text-center my-3">
+            <p class="fw-bold">Välj årskurs:</p>
+            <div class="row justify-content-center">
+                        @foreach (int grade in Enumerable.Range(4, 6)) // Skapar knappar för årskurs 4-9
+                        {
+                        <div class="col-4 d-flex justify-content-center mb-2">
+                            <button class="btn @(selectedGrade == grade ? "btn-secondary" : "btn-outline-secondary") w-100"
+                                    @onclick="@(() => SelectGrade(grade))">
+                                Årskurs @grade
+                            </button>
+                        </div>
+                        }
+            </div>
         </div>
+
 
         <button class="btn btn-primary me-2 mt-2 px-4" @onclick="GetAIResponse" disabled="@isLoading">
             @(isLoading ? "Väntar..." : "Respons")
