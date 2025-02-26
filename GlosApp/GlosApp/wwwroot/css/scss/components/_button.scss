@@ -12,6 +12,23 @@
     text-align: center;
 }
 
+.large-btn {
+    background-color: #194C67;
+    border: 1px solid #194C67;
+    border-radius: 0.5rem;
+    width: 10rem;
+    height: 38px;
+    font-size: 16px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+
+
 .btn-primary:hover {
     background-color: #156089;
     border-color: #156089;

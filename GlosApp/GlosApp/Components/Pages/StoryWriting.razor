@@ -23,16 +23,19 @@
         <div class="year-selection text-center my-3">
             <p class="fw-bold">Välj årskurs:</p>
             <div class="row justify-content-center">
-                        @foreach (int grade in Enumerable.Range(4, 6)) // Skapar knappar för årskurs 4-9
-                        {
-                        <div class="col-4 d-flex justify-content-center mb-2">
-                            <button class="btn @(selectedGrade == grade ? "btn-secondary" : "btn-outline-secondary") w-100"
-                                    @onclick="@(() => SelectGrade(grade))">
-                                Årskurs @grade
-                            </button>
-                        </div>
-                        }
+                @foreach (int grade in Enumerable.Range(4, 6)) // Skapar knappar för årskurs 4-9
+                {
+                    <div class="col-4 d-flex justify-content-center mb-2">
+                        <button class="btn @(selectedGrade == grade ? "btn-secondary" : "btn-outline-secondary") w-100"
+                                @onclick="() => SelectGrade(grade)">
+                            Årskurs @grade
+                        </button>
+                    </div>
+                }
             </div>
+
+            <p class="text-center mt-2">Vald årskurs: <strong>@selectedGrade</strong></p>
+
         </div>
 
 
@@ -124,12 +127,13 @@
         }
     }
 
-    private int selectedGrade = 7; 
-
+    private int selectedGrade = 5;
+    
     private void SelectGrade(int grade)
     {
         selectedGrade = grade;
-        StateHasChanged(); // Uppdaterar UI
+        Logger.LogInformation($"Vald årskurs: {selectedGrade}"); // Loggar i backend
+        StateHasChanged(); // Uppdatera UI:t
     }
 
     private async Task GetAIResponse()
@@ -145,25 +149,29 @@
             string originalMessage = userMessage;
 
             // Skapa modifierad prompt
-            modifiedMessage = $"Du är en lärare som ger respons på en text skriven av en elev i årskurs {selectedGrade}. " +
-                              "Din uppgift är att identifiera följande och svara i tre separata sektioner: " +
-                              "1. **Stavning**: Lista stavfel och föreslå korrekta stavningar. " +
-                              "2. **Grammatik**: Identifiera grammatiska fel och ge exempel på förbättringar. " +
-                              "3. **Allmän feedback**: Ge kort feedback om textens innehåll, flyt och struktur. " +
-                              "Använd tydliga rubriker och radbrytningar. Här är elevens text:\n\n" +
+            modifiedMessage = $"Du är en erfaren svensklärare som ger konstruktiv respons på en text skriven av en elev i årskurs {selectedGrade}. " +
+                              "Din uppgift är att analysera texten och ge feedback i tre tydliga sektioner:\n\n" +
+                              "### 1. Stavning\n" +
+                              "- Identifiera stavfel och föreslå rätt stavning.\n" +
+                              "- Förklara varför ordet är felstavat om relevant.\n\n" +
+                              "### 2. Grammatik\n" +
+                              "- Identifiera grammatiska fel och ge förslag på förbättringar.\n" +
+                              "- Ge korta exempel på hur meningen kan skrivas om.\n\n" +
+                              "### 3. Allmän feedback\n" +
+                              "- Ge en kort sammanfattning av textens innehåll, struktur och flyt.\n" +
+                              "- Anpassa feedbacken efter elevens årskurs.\n" +
+                              "- Använd ett positivt och uppmuntrande tonfall.\n\n" +
+                              "Svara med tydliga rubriker och radbrytningar. Här är elevens text:\n\n" +
                               $"{userMessage}";
 
 
-            // Säkerställ att modifiedMessage uppdateras i UI
             StateHasChanged();
-            await Task.Delay(50); // Kort delay för att säkerställa uppdatering i Blazor
+            await Task.Delay(50); 
 
             Logger.LogInformation($"Skickar följande prompt till AI: {modifiedMessage}");
 
-            // Skicka modifierad prompt
             await aiComponent.GetAIResponse();
 
-            // Återställ userMessage
             userMessage = originalMessage;
 
             isLoading = false;
@@ -185,12 +193,12 @@
 
 
     formattedResponse = response
-    .Replace("### ", "<h3>") // Konvertera större rubriker om de finns
-    .Replace("**", "<strong>") // Gör fetstil korrekt
-    .Replace("\n- ", "<li>") // Omvandla listpunkter
-    .Replace("\n", "<br>") // Behåll radbrytningar
-    .Replace("<br><li>", "<ul><li>") // Se till att listan öppnas korrekt
-    + "</ul>"; // Stäng listan
+    .Replace("### ", "<h3>") 
+    .Replace("**", "<strong>") 
+    .Replace("\n- ", "<li>") 
+    .Replace("\n", "<br>") 
+    .Replace("<br><li>", "<ul><li>") 
+    + "</ul>"; 
 
         formattedResponse = Markdown.ToHtml(response);
     }

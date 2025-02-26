@@ -125,6 +125,17 @@
             StateHasChanged();
 
             string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. Format: Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar";
+
+
+            // string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. " +
+            //     $"Frågorna ska vara anpassade för elever i årskurs {selectedGrade}. " +
+            //     "Svara i följande format, separerat med '|':\n\n" +
+            //     "Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar\n\n" +
+            //     "Exempel:\n" +
+            //     "Vad är huvudstaden i Sverige? | Stockholm, Oslo, Köpenhamn, Helsingfors | Stockholm\n\n" +
+            //     "Frågorna ska vara tydliga, relevanta och pedagogiska.";
+
+
             aiComponent.UserMessage = prompt;
             aiComponent.ApiToken = apiToken;
             await aiComponent.GetAIResponse();

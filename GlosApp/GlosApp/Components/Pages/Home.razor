@@ -3,11 +3,6 @@
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
 
-
-@* Lägg till Bootstrap CSS *@
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-
-
 <main>
     <div class="wrapper">
         <div class="carousel slide mt-4" id="danceCarousel" data-ride="carousel" data-interval="3000">
@@ -33,10 +28,11 @@
         </div>
 
         <div class="btn mt-4">
-            <NavLink href="/glossary" class="btn btn-primary">Glosor</NavLink>
-            <NavLink href="/quiz" class="btn btn-primary">Quiz</NavLink>
-            <NavLink href="/story-writing" class="btn btn-primary">Berättelse</NavLink>
-            <NavLink href="/ai" class="btn btn-primary">Fråga AI</NavLink>
+            <NavLink href="/glossary" class="btn large-btn">📖 Glosor</NavLink>
+            <NavLink href="/quiz" class="btn large-btn">❓ Quiz</NavLink>
+            <NavLink href="/story-writing" class="btn large-btn">✍️ Skriva</NavLink>
+            <NavLink href="/ai" class="btn large-btn">🤖 Fråga AI</NavLink>
+
 
          @*    <NavLink href="/Spanish" class="btn btn-primary">Spanska</NavLink> *@
         </div>
@@ -121,15 +117,8 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             min-width: 250px;
-        }
-       
-
-        
+        }  
     </style>
-
-
-
-
 </main>
 
 @code {
@@ -180,7 +169,7 @@
         {
             Console.WriteLine($"Error fetching images: {ex.Message}");
 
-            if (!horseImageUrls.Any()) // Endast om listan är tom
+            if (!horseImageUrls.Any()) 
             {
                 horseImageUrls = new List<string>
         {
@@ -190,7 +179,7 @@
         };
             }
 
-            if (!danceImageUrls.Any()) // Endast om listan är tom
+            if (!danceImageUrls.Any())
             {
                 danceImageUrls = new List<string>
         {
@@ -205,19 +194,10 @@
 
 
     public class VisitorCounterService
-
     {
-
         private static int visitorCount = 0;
-
-
-
         public int GetVisitorCount() => visitorCount;
-
-
-
         public void IncrementVisitorCount() => visitorCount++;
-
     }
 
     public class Photo
