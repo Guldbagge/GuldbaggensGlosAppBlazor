@@ -19,6 +19,8 @@ namespace GlosApp.Data
         public DbSet<HorseHealthStatus> HorseHealthStatuses { get; set; }
         public DbSet<HorseDiaryEntry> HorseDiaryEntries { get; set; }
 
+        public DbSet<SurveyResponse> SurveyResponses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
