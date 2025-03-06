@@ -72,6 +72,21 @@
         </div>
     }
 
+    <div class="year-selection text-center my-3">
+        <p class="fw-bold">Välj årskurs:</p>
+        <div class="row justify-content-center">
+            @foreach (int grade in Enumerable.Range(4, 6)) // Skapar knappar för årskurs 4-9
+            {
+                <div class="col-4 d-flex justify-content-center mb-2">
+                    <button class="btn @(selectedGrade == grade ? "btn-secondary" : "btn-outline-secondary") w-100"
+                            @onclick="() => SelectGrade(grade)">
+                        Årskurs @grade
+                    </button>
+                </div>
+            }
+        </div>
+        <p class="text-center mt-2">Vald årskurs: <strong>@selectedGrade</strong></p>
+    </div>
 
 </div>
 
@@ -95,7 +110,7 @@
     private string apiToken = "";
     private AiResponse? aiComponent;
     private bool quizCompleted = false;
-   
+    private int selectedGrade = 5;
     
     private List<QuizQuestionModel> quizQuestions = new List<QuizQuestionModel>();
 
@@ -117,6 +132,14 @@
         }
     }
 
+    private void SelectGrade(int grade)
+    {
+        selectedGrade = grade;
+        Logger.LogInformation($"Vald årskurs: {selectedGrade}"); // Loggar i backend
+        StateHasChanged(); // Uppdatera UI:t
+    }
+
+
     private async Task GetAIQuiz()
     {
         if (aiComponent is not null)
@@ -124,16 +147,17 @@
             isLoading = true;
             StateHasChanged();
 
-            string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. Format: Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar";
+            // string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. Format: Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar";
 
 
-            // string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. " +
-            //     $"Frågorna ska vara anpassade för elever i årskurs {selectedGrade}. " +
-            //     "Svara i följande format, separerat med '|':\n\n" +
-            //     "Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar\n\n" +
-            //     "Exempel:\n" +
-            //     "Vad är huvudstaden i Sverige? | Stockholm, Oslo, Köpenhamn, Helsingfors | Stockholm\n\n" +
-            //     "Frågorna ska vara tydliga, relevanta och pedagogiska.";
+            string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. " +
+                $"Frågorna ska vara anpassade för elever i årskurs {selectedGrade}. " +
+                "Svara i följande format, separerat med '|':\n\n" +
+                "Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar\n\n" +
+                "Exempel:\n" +
+                "Vad är huvudstaden i Sverige? | Stockholm, Oslo, Köpenhamn, Helsingfors | Stockholm\n\n" +
+                "Frågorna ska vara tydliga, relevanta och pedagogiska.";
+
 
 
             aiComponent.UserMessage = prompt;

@@ -25,6 +25,16 @@
     </AuthorizeView>
 </div>
 
+@if (NavigationManager.Uri.EndsWith("/"))
+{
+    <div class="announcement">
+        📢 Denna vecka testas <strong>pluggat.se</strong> av elever i årskurs fem på Adolfsbergsskolan.
+        Tack för att ni är med och utvecklar! 🚀
+    </div>
+}
+
+
+
 
 @* 
 <div class="header">

@@ -33,11 +33,11 @@
         font-weight: 700;
         color: #E6E6FA;
         animation: fadeInDown 1s ease-in-out;
-        border: none; /* Tar bort eventuell kant */
-        outline: none; /* Tar bort eventuell fokusram */
-        background: none; /* Tar bort bakgrund */
-        padding: 0; /* Tar bort eventuell inre marginal */
-        margin: 0; /* Tar bort yttre marginal */
+        border: none; 
+        outline: none; 
+        background: none; 
+        padding: 0; 
+        margin: 0; 
     }
 
 
@@ -96,3 +96,32 @@
         }
     }
 }
+.announcement {
+    background-color: #FFD700; 
+    color: #4B0082; 
+    text-align: center;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .announcement {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
