@@ -130,7 +130,7 @@
     {
         try
         {
-            var horseResponse = await Http.GetStringAsync("https://api.unsplash.com/photos/random?query=sport&count=3&client_id=KskWzvW414fiXTLDuI8evhu2N5DdnATSMHR_6tEGY3k");
+            var horseResponse = await Http.GetStringAsync("https://api.unsplash.com/photos/random?query=dance&count=3&client_id=KskWzvW414fiXTLDuI8evhu2N5DdnATSMHR_6tEGY3k");
             Console.WriteLine($"Horse API Response: {horseResponse}"); // Logga för att kolla API-responsen
             var horsePhotoData = JsonSerializer.Deserialize<List<Photo>>(horseResponse);
 
@@ -140,7 +140,7 @@
                 .Select(url => url!)
                 .ToList() ?? new List<string>();
 
-            var danceResponse = await Http.GetStringAsync("https://api.unsplash.com/photos/random?query=dance&count=3&client_id=KskWzvW414fiXTLDuI8evhu2N5DdnATSMHR_6tEGY3k");
+            var danceResponse = await Http.GetStringAsync("https://api.unsplash.com/photos/random?query=sport&count=3&client_id=KskWzvW414fiXTLDuI8evhu2N5DdnATSMHR_6tEGY3k");
             Console.WriteLine($"Dance API Response: {danceResponse}"); // Logga för att kolla API-responsen
             var dancePhotoData = JsonSerializer.Deserialize<List<Photo>>(danceResponse);
 
