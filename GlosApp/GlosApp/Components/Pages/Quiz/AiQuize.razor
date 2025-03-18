@@ -1,6 +1,6 @@
-﻿@* <div class="beta-banner">
+﻿<div class="beta-banner">
     🚀 Denna version är en **beta**! Funktionalitet och innehåll kan ändras. Tack för att du testar! 😊
-</div> *@
+</div>
 
 
 @page "/ai-quiz"
@@ -150,13 +150,16 @@
             // string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. Format: Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar";
 
 
-            string prompt = $"Generera 10 quizfrågor om ämnet: {userMessage}. " +
+            string prompt = $"Generera exakt 10 quizfrågor om ämnet: {userMessage}. " +
                 $"Frågorna ska vara anpassade för elever i årskurs {selectedGrade}. " +
+                "Varje fråga måste ha exakt 4 svarsalternativ. Inga fler, inga färre.\n\n" +
                 "Svara i följande format, separerat med '|':\n\n" +
                 "Fråga | Alternativ1, Alternativ2, Alternativ3, Alternativ4 | Rätt svar\n\n" +
                 "Exempel:\n" +
                 "Vad är huvudstaden i Sverige? | Stockholm, Oslo, Köpenhamn, Helsingfors | Stockholm\n\n" +
+                "Viktigt: Endast 4 svarsalternativ per fråga. Undvik att lägga till fler eller färre. " +
                 "Frågorna ska vara tydliga, relevanta och pedagogiska.";
+
 
 
 
