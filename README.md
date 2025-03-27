@@ -17,9 +17,7 @@ This is a Blazor Server application for creating and interacting with a vocabula
 - **ASP.NET Core**: For backend integration.
 
 ## Installation
-1. Clone the repository:
-   git clone https://github.com/username/vocabulary-form-blazor.git
-   cd vocabulary-form-blazor
+1. Clone the repository
 2. Configure the database connection string in appsettings.json
 3. Migration dotnet ef database update
 4. Run the application: dotnet run
