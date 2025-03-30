@@ -9,7 +9,7 @@ public class WordAnswer
     public string Language { get; set; } = null!;
     public DateTime Timestamp { get; set; } 
 
-    // Standardkonstruktor
+
     public WordAnswer()
     {
         Timestamp = DateTime.Now;
