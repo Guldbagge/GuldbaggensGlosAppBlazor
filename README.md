@@ -4,6 +4,12 @@
 
 GuldbaggensGlosApp is a Blazor Server application that helps students learn vocabulary by translating words, getting instant feedback, and saving progress. It also supports AI-powered assistance for texts and quizzes.
 
+## Purpose & Scope
+
+This project is primarily intended for educational and experimental use.
+It serves as a platform for exploring features in Blazor, testing architectural patterns, and experimenting with AI integration and user interaction flows.
+As such, the codebase may contain work-in-progress features, and is not optimized for production use.
+
 ## Features
 - ✅ Vocabulary list with editable fields for user input.
 - 🔍 Validates answers and gives instant feedback in the UI.
