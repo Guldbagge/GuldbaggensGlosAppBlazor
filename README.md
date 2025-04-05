@@ -10,7 +10,7 @@ GuldbaggensGlosApp is a Blazor Server application that helps students learn voca
 - 📊 Tracks the number of correct answers.
 - 💾 Saves user responses to a database.
 - 🤖 **AI Assistance**  
-  - Students can get help with understanding texts.  
+  - Students can get AI-generated feedback on texts they have written. 
   - Automatically generate quizzes based on selected vocabulary or topics. 
 
 
