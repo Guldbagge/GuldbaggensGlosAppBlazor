@@ -1,6 +1,6 @@
-# **README GuldbaggensGlosAppAssignment
+# README GuldbaggensGlosAppAssignment
 
-# Vocabulary Form in Blazor
+## Vocabulary Form in Blazor
 
 GuldbaggensGlosApp is a Blazor Server application that helps students learn vocabulary by translating words, getting instant feedback, and saving progress. It also supports AI-powered assistance for texts and quizzes.
 
