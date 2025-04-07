@@ -1,8 +1,11 @@
 ﻿@page "/glossary/korean"
 @rendermode InteractiveWebAssembly
 @using System.Linq
+@using System.Diagnostics
 
 <HamburgerMenu />
+
+
 <div class="container">
     <h3>Glosformulär - Koreanska</h3>
 
@@ -34,6 +37,8 @@
         {
             <div class="alert alert-info">
                 Du fick @correctAnswers av @userAnswerForm.Answers.Count ord rätt!
+                <br />
+                Responstiden var @responseTime ms.
             </div>
         }
 
@@ -54,6 +59,7 @@
     private int correctAnswers = 0;
     private bool showResult = false;
     private bool missingAnswers = false;
+    private long responseTime = 0;
 
     protected override void OnInitialized()
     {
@@ -74,11 +80,15 @@
 
     private void CheckAnswers()
     {
+        // Starta tidtagning
+        var stopwatch = Stopwatch.StartNew();
+
         missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
 
         if (missingAnswers)
         {
             showResult = false;
+            stopwatch.Stop();
             return;
         }
 
@@ -86,7 +96,12 @@
             NormalizeAnswer(answer.UserAnswer).Equals(NormalizeAnswer(answer.KoreanRomanized), StringComparison.OrdinalIgnoreCase));
 
         showResult = true;
+
+        // Stanna tidtagningen och sätt responstiden
+        stopwatch.Stop();
+        responseTime = stopwatch.ElapsedMilliseconds;
     }
+
 
     private string NormalizeAnswer(string answer)
     {

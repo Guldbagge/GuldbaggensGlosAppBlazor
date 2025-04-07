@@ -5,7 +5,7 @@
 @using GlosApp.Models
 @inject ApplicationDbContext DbContext
 @inject IConfiguration Configuration
-
+@using System.Diagnostics;
 
 <div class="container">
     <h3>Glosformulär Engelska</h3>
@@ -53,6 +53,8 @@
         {
             <div class="alert alert-info">
                 Du fick @correctAnswers av @userAnswerForm.Answers.Count ord rätt!
+                <br />
+                Responstiden var @responseTime ms.
             </div>
         }
 
@@ -135,13 +137,18 @@
         Task.Delay(10).ContinueWith(_ => InvokeAsync(StateHasChanged)); 
     }
 
-    private void CheckAnswers()
+    private long responseTime = 0;
+
+    private async Task CheckAnswers()
     {
+        var stopwatch = Stopwatch.StartNew();
+
         missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
 
         if (missingAnswers)
         {
             showResult = false;
+            stopwatch.Stop();
             return;
         }
 
@@ -161,7 +168,17 @@
 
         DbContext.SaveChanges();
         showResult = true;
+
+        stopwatch.Stop();
+
+        responseTime = stopwatch.ElapsedMilliseconds;
+
+        Console.WriteLine($"Responstiden var {responseTime} ms.");
+
+        StateHasChanged();
     }
+
+
 
     private void ResetForm()
     {
