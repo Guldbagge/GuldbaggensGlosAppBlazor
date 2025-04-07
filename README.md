@@ -1,23 +1,26 @@
-# **README GuldbaggensGlosAppAssignment
+# README GuldbaggensGlosAppAssignment
 
-# Vocabulary Form in Blazor
+## Vocabulary Form in Blazor
 
-This is a Blazor Server application for creating and interacting with a vocabulary form. The form allows users to input translations for words, validates the answers, and provides feedback, with data saved directly to a database.
+GuldbaggensGlosApp is a Blazor Server application that helps students learn vocabulary by translating words, getting instant feedback, and saving progress. It also supports AI-powered assistance for texts and quizzes.
+
+## Purpose & Scope
+
+This project is primarily intended for educational and experimental use.
+It serves as a platform for exploring features in Blazor, testing architectural patterns, and experimenting with AI integration and user interaction flows.
+As such, the codebase may contain work-in-progress features, and is not optimized for production use.
 
 ## Features
-- Displays a vocabulary list with editable fields for user input.
-- Validates answers and provides feedback directly in the UI.
-- Tracks the number of correct answers.
-- Saves user responses to a database using Entity Framework Core.
-- Allows resetting the form to start over.
+- ✅ Vocabulary list with editable fields for user input.
+- 🔍 Validates answers and gives instant feedback in the UI.
+- 📊 Tracks the number of correct answers.
+- 💾 Saves user responses to a database.
+- 🤖 **AI Assistance**  
+  - Students can get AI-generated feedback on texts they have written. 
+  - Automatically generate quizzes based on selected vocabulary or topics. 
 
-## Technologies
-- **Blazor Server**: Framework for building interactive web UIs using C#.
-- **Entity Framework Core**: For database interactions.
-- **ASP.NET Core**: For backend integration.
 
 ## Installation
 1. Clone the repository
 2. Configure the database connection string in appsettings.json
 3. Migration dotnet ef database update
-4. Run the application: dotnet run
