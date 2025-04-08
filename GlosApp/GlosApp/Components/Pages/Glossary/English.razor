@@ -155,6 +155,9 @@
         correctAnswers = userAnswerForm.Answers.Count(answer =>
             answer.UserAnswer?.Trim().Equals(answer.English.Trim(), StringComparison.OrdinalIgnoreCase) == true);
 
+        stopwatch.Stop();
+        responseTime = stopwatch.ElapsedMilliseconds;
+
         foreach (var answer in userAnswerForm.Answers)
         {
             DbContext.WordAnswers.Add(new WordAnswer
@@ -169,7 +172,7 @@
         DbContext.SaveChanges();
         showResult = true;
 
-        stopwatch.Stop();
+      
 
         responseTime = stopwatch.ElapsedMilliseconds;
 

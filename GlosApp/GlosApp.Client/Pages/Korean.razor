@@ -1,4 +1,5 @@
-﻿@page "/glossary/korean"
+﻿
+@page "/glossary/korean"
 @rendermode InteractiveWebAssembly
 @using System.Linq
 @using System.Diagnostics
@@ -50,7 +51,7 @@
         }
 
         <button type="submit" class="btn btn-primary">Rätta</button>
-        <button type="button" class="btn btn-success" @onclick="ResetForm">Rensa glosformuläret</button>
+        <button type="button" class="btn btn-success mt-4" @onclick="ResetForm">Rensa glosformuläret</button>
     </EditForm>
 </div>
 
@@ -78,9 +79,8 @@
         };
     }
 
-    private void CheckAnswers()
+    private async Task CheckAnswers()
     {
-        // Starta tidtagning
         var stopwatch = Stopwatch.StartNew();
 
         missingAnswers = userAnswerForm.Answers.Any(answer => string.IsNullOrWhiteSpace(answer.UserAnswer));
@@ -97,9 +97,34 @@
 
         showResult = true;
 
-        // Stanna tidtagningen och sätt responstiden
         stopwatch.Stop();
         responseTime = stopwatch.ElapsedMilliseconds;
+
+        await SaveAnswersToFunction();
+    }
+
+    [Inject] private HttpClient Http { get; set; }
+
+    private async Task SaveAnswersToFunction()
+    {
+        var answersToSend = userAnswerForm.Answers.Select(a => new
+        {
+            swedish = a.Swedish,
+            english = a.KoreanRomanized,
+            userAnswer = a.UserAnswer,
+            language = "korean"
+        }).ToList();
+
+        var response = await Http.PostAsJsonAsync("https://wordanswerfunctionapp.azurewebsites.net/api/SaveWordAnswers", answersToSend);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"❌ Error saving answers: {response.StatusCode}");
+        }
+        else
+        {
+            Console.WriteLine("✅ Answers saved to Azure Function.");
+        }
     }
 
 
