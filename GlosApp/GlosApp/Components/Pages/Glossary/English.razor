@@ -54,7 +54,7 @@
             <div class="alert alert-info">
                 Du fick @correctAnswers av @userAnswerForm.Answers.Count ord rätt!
                 <br />
-                Responstiden var @responseTime ms.
+                ⏱️ Responstiden var @responseTime ms.
             </div>
         }
 
@@ -62,6 +62,13 @@
         {
             <div class="alert alert-warning">
                 Du måste fylla i alla fält innan du kan kontrollera dina svar.
+            </div>
+        }
+
+        @if (renderTime > 0)
+        {
+            <div class="alert alert-secondary mt-2">
+                ⏱️ Renderingtiden var: @renderTime ms.
             </div>
         }
 
@@ -82,9 +89,26 @@
     private AiResponse? aiComponent;
     private string userMessage = "";
     private string apiToken = ""; // Inte hårdkodad längre
+    private bool firstRender = true;
+    private Stopwatch renderStopwatch = new Stopwatch();
+    private long renderTime;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            renderStopwatch.Stop();
+            renderTime = renderStopwatch.ElapsedMilliseconds;
+
+            Console.WriteLine($"⏱️ Renderingtiden (första render) var: {renderTime} ms.");
+            StateHasChanged(); // Endast om du vill visa det i UI
+        }
+    }
+
 
     protected override void OnInitialized()
     {
+        renderStopwatch.Start();
         // Hämta API-nyckeln från konfigurationen
         apiToken = Configuration["ApiKeys:ServiceA"] ?? "API-nyckel saknas";
 
@@ -199,5 +223,7 @@
     {
         public List<WordAnswer> Answers { get; set; } = new List<WordAnswer>();
     }
+
+
 }
 
